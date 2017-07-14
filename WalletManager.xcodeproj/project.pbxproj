@@ -9,14 +9,15 @@
 /* Begin PBXBuildFile section */
 		AA263AA6232B58470CCA7CD7 /* Pods_WalletManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 129151B6ED64BEAD29B31ADE /* Pods_WalletManager.framework */; };
 		F419956D1F192B920055E2AA /* ActivityIndicatorOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419956C1F192B920055E2AA /* ActivityIndicatorOverlay.swift */; };
+		F41995711F1938330055E2AA /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41995701F1938330055E2AA /* SettingsViewController.swift */; };
+		F41995741F193AEC0055E2AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F41995731F193AEC0055E2AA /* Assets.xcassets */; };
 		F4AC7B791F17D22A009E0251 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AC7B781F17D22A009E0251 /* AppDelegate.swift */; };
 		F4AC7B7E1F17D22A009E0251 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4AC7B7C1F17D22A009E0251 /* Login.storyboard */; };
-		F4AC7B801F17D22A009E0251 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4AC7B7F1F17D22A009E0251 /* Assets.xcassets */; };
 		F4AC7B831F17D22A009E0251 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4AC7B811F17D22A009E0251 /* LaunchScreen.storyboard */; };
 		F4AC7B8C1F17D3C7009E0251 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AC7B8B1F17D3C7009E0251 /* LoginViewController.swift */; };
 		F4AC7B8F1F17DA02009E0251 /* LoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AC7B8E1F17DA02009E0251 /* LoginTextField.swift */; };
 		F4AC7B911F17E077009E0251 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F4AC7B901F17E077009E0251 /* GoogleService-Info.plist */; };
-		F4E066C41F190A280057C1E5 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E066C31F190A280057C1E5 /* Defines.swift */; };
+		F4E066C41F190A280057C1E5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E066C31F190A280057C1E5 /* Extensions.swift */; };
 		F4E066C91F190D310057C1E5 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E066C81F190D310057C1E5 /* HomeViewController.swift */; };
 		F4E066CB1F190D690057C1E5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4E066CA1F190D690057C1E5 /* Main.storyboard */; };
 /* End PBXBuildFile section */
@@ -26,17 +27,18 @@
 		129151B6ED64BEAD29B31ADE /* Pods_WalletManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WalletManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AAEB3834051B1F1C0310FEC /* Pods-WalletManager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WalletManager.release.xcconfig"; path = "Pods/Target Support Files/Pods-WalletManager/Pods-WalletManager.release.xcconfig"; sourceTree = "<group>"; };
 		F419956C1F192B920055E2AA /* ActivityIndicatorOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorOverlay.swift; sourceTree = "<group>"; };
+		F41995701F1938330055E2AA /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		F41995731F193AEC0055E2AA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F4AC7B751F17D22A009E0251 /* WalletManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WalletManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4AC7B781F17D22A009E0251 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F4AC7B7D1F17D22A009E0251 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Login.storyboard; sourceTree = "<group>"; };
-		F4AC7B7F1F17D22A009E0251 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F4AC7B821F17D22A009E0251 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F4AC7B841F17D22A009E0251 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F4AC7B8B1F17D3C7009E0251 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		F4AC7B8E1F17DA02009E0251 /* LoginTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTextField.swift; sourceTree = "<group>"; };
 		F4AC7B901F17E077009E0251 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F4AC7B921F17E0F1009E0251 /* WalletManager-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WalletManager-Bridging-Header.h"; sourceTree = "<group>"; };
-		F4E066C31F190A280057C1E5 /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
+		F4E066C31F190A280057C1E5 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		F4E066C81F190D310057C1E5 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		F4E066CA1F190D690057C1E5 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -70,6 +72,14 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		F41995721F1939170055E2AA /* LaunchScreen */ = {
+			isa = PBXGroup;
+			children = (
+				F4AC7B811F17D22A009E0251 /* LaunchScreen.storyboard */,
+			);
+			name = LaunchScreen;
+			sourceTree = "<group>";
+		};
 		F4AC7B6C1F17D22A009E0251 = {
 			isa = PBXGroup;
 			children = (
@@ -91,16 +101,12 @@
 		F4AC7B771F17D22A009E0251 /* WalletManager */ = {
 			isa = PBXGroup;
 			children = (
+				F4AC7B781F17D22A009E0251 /* AppDelegate.swift */,
+				F41995731F193AEC0055E2AA /* Assets.xcassets */,
+				F4AC7B901F17E077009E0251 /* GoogleService-Info.plist */,
+				F4AC7B841F17D22A009E0251 /* Info.plist */,
 				F4AC7B8D1F17D9F5009E0251 /* Utils */,
 				F4AC7B8A1F17D3AF009E0251 /* View Controllers */,
-				F4AC7B781F17D22A009E0251 /* AppDelegate.swift */,
-				F419956C1F192B920055E2AA /* ActivityIndicatorOverlay.swift */,
-				F4AC7B7F1F17D22A009E0251 /* Assets.xcassets */,
-				F4AC7B811F17D22A009E0251 /* LaunchScreen.storyboard */,
-				F4AC7B841F17D22A009E0251 /* Info.plist */,
-				F4AC7B901F17E077009E0251 /* GoogleService-Info.plist */,
-				F4AC7B921F17E0F1009E0251 /* WalletManager-Bridging-Header.h */,
-				F4E066C31F190A280057C1E5 /* Defines.swift */,
 			);
 			path = WalletManager;
 			sourceTree = "<group>";
@@ -108,9 +114,9 @@
 		F4AC7B8A1F17D3AF009E0251 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				F4E066C61F190D140057C1E5 /* Home */,
+				F41995721F1939170055E2AA /* LaunchScreen */,
 				F4E066C51F190D0C0057C1E5 /* Login */,
-				F4E066CA1F190D690057C1E5 /* Main.storyboard */,
+				F4E066C61F190D140057C1E5 /* Main */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -118,7 +124,10 @@
 		F4AC7B8D1F17D9F5009E0251 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				F4E066C31F190A280057C1E5 /* Extensions.swift */,
+				F419956C1F192B920055E2AA /* ActivityIndicatorOverlay.swift */,
 				F4AC7B8E1F17DA02009E0251 /* LoginTextField.swift */,
+				F4AC7B921F17E0F1009E0251 /* WalletManager-Bridging-Header.h */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -126,18 +135,20 @@
 		F4E066C51F190D0C0057C1E5 /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				F4AC7B8B1F17D3C7009E0251 /* LoginViewController.swift */,
 				F4AC7B7C1F17D22A009E0251 /* Login.storyboard */,
+				F4AC7B8B1F17D3C7009E0251 /* LoginViewController.swift */,
 			);
 			name = Login;
 			sourceTree = "<group>";
 		};
-		F4E066C61F190D140057C1E5 /* Home */ = {
+		F4E066C61F190D140057C1E5 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				F4E066CA1F190D690057C1E5 /* Main.storyboard */,
 				F4E066C81F190D310057C1E5 /* HomeViewController.swift */,
+				F41995701F1938330055E2AA /* SettingsViewController.swift */,
 			);
-			name = Home;
+			name = Main;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -207,8 +218,8 @@
 				F4AC7B831F17D22A009E0251 /* LaunchScreen.storyboard in Resources */,
 				F4E066CB1F190D690057C1E5 /* Main.storyboard in Resources */,
 				F4AC7B911F17E077009E0251 /* GoogleService-Info.plist in Resources */,
-				F4AC7B801F17D22A009E0251 /* Assets.xcassets in Resources */,
 				F4AC7B7E1F17D22A009E0251 /* Login.storyboard in Resources */,
+				F41995741F193AEC0055E2AA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,8 +280,9 @@
 			files = (
 				F4E066C91F190D310057C1E5 /* HomeViewController.swift in Sources */,
 				F4AC7B8F1F17DA02009E0251 /* LoginTextField.swift in Sources */,
+				F41995711F1938330055E2AA /* SettingsViewController.swift in Sources */,
 				F4AC7B8C1F17D3C7009E0251 /* LoginViewController.swift in Sources */,
-				F4E066C41F190A280057C1E5 /* Defines.swift in Sources */,
+				F4E066C41F190A280057C1E5 /* Extensions.swift in Sources */,
 				F4AC7B791F17D22A009E0251 /* AppDelegate.swift in Sources */,
 				F419956D1F192B920055E2AA /* ActivityIndicatorOverlay.swift in Sources */,
 			);

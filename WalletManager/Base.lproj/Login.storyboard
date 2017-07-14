@@ -94,30 +94,21 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ihf-LB-5dN" customClass="GIDSignInButton">
-                                <rect key="frame" x="16" y="317" width="140" height="40"/>
+                                <rect key="frame" x="16" y="323" width="288" height="40"/>
                                 <color key="backgroundColor" red="0.0" green="1" blue="0.0092660712580000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="CJT-n8-8d3"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tHs-lz-kHu">
-                                <rect key="frame" x="164" y="317" width="140" height="40"/>
-                                <color key="backgroundColor" red="0.0" green="1" blue="0.0092660712580000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="m94-tz-vcP"/>
+                                    <constraint firstAttribute="height" constant="40" id="tnh-JK-OcO"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="wUB-ll-cfo" secondAttribute="trailing" id="0DE-VP-vlz"/>
-                            <constraint firstItem="tHs-lz-kHu" firstAttribute="top" secondItem="2fu-fJ-pCC" secondAttribute="bottom" constant="2" id="0di-Is-OiG"/>
                             <constraint firstItem="wUB-ll-cfo" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="0yp-oN-8u2"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="pSA-QD-kQp" secondAttribute="bottom" constant="20" id="32w-jl-oXJ"/>
                             <constraint firstItem="2fu-fJ-pCC" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="3OI-ze-lbl"/>
+                            <constraint firstItem="Ihf-LB-5dN" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="4ER-vw-EO9"/>
                             <constraint firstItem="Al4-Xq-ILN" firstAttribute="top" secondItem="aXh-R5-itf" secondAttribute="bottom" constant="-7" id="5xd-LX-CHq"/>
-                            <constraint firstItem="tHs-lz-kHu" firstAttribute="width" secondItem="Ihf-LB-5dN" secondAttribute="width" id="9v5-wF-UeV"/>
-                            <constraint firstItem="tHs-lz-kHu" firstAttribute="leading" secondItem="Ihf-LB-5dN" secondAttribute="trailing" constant="8" id="AFX-7u-UF9"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Al4-Xq-ILN" secondAttribute="trailing" id="AlS-o1-6tQ"/>
                             <constraint firstItem="2fu-fJ-pCC" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="EMA-tO-Tgm"/>
                             <constraint firstAttribute="trailingMargin" secondItem="pSA-QD-kQp" secondAttribute="trailing" id="GDJ-xz-JtI"/>
@@ -127,17 +118,15 @@
                             <constraint firstItem="aXh-R5-itf" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="Mdr-IM-OSl"/>
                             <constraint firstItem="2fu-fJ-pCC" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="16" id="Mdv-9v-8UZ"/>
                             <constraint firstItem="Cdo-Iu-aRZ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="OWm-k6-gMv"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="tHs-lz-kHu" secondAttribute="trailing" id="Oa3-9B-yHu"/>
                             <constraint firstItem="aXh-R5-itf" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-16" id="PiT-b4-LGG"/>
                             <constraint firstItem="TQm-UG-z03" firstAttribute="top" secondItem="2fu-fJ-pCC" secondAttribute="bottom" constant="-7" id="Y3S-HM-mgq"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Cdo-Iu-aRZ" secondAttribute="trailing" id="bWu-oi-muJ"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Ihf-LB-5dN" secondAttribute="trailing" id="dFq-pn-ALM"/>
                             <constraint firstItem="Cdo-Iu-aRZ" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="fUu-Eb-KQV"/>
                             <constraint firstItem="TQm-UG-z03" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="fmn-14-zI3"/>
-                            <constraint firstItem="tHs-lz-kHu" firstAttribute="leading" secondItem="Ihf-LB-5dN" secondAttribute="trailing" constant="8" id="hq5-LN-2Qo"/>
-                            <constraint firstItem="Ihf-LB-5dN" firstAttribute="top" secondItem="2fu-fJ-pCC" secondAttribute="bottom" constant="2" id="jK6-Z6-Vhr"/>
                             <constraint firstItem="TQm-UG-z03" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="kz9-qo-hFq"/>
                             <constraint firstItem="pSA-QD-kQp" firstAttribute="top" secondItem="wUB-ll-cfo" secondAttribute="bottom" constant="8" id="qZ9-1n-YxZ"/>
-                            <constraint firstItem="Ihf-LB-5dN" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="tvO-Hs-nZF"/>
+                            <constraint firstItem="Ihf-LB-5dN" firstAttribute="top" secondItem="2fu-fJ-pCC" secondAttribute="bottom" constant="8" id="tnK-Jz-qGg"/>
                         </constraints>
                     </view>
                     <connections>

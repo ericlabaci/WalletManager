@@ -15,18 +15,18 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
     @IBOutlet weak var textFieldEmail: LoginTextField!
     @IBOutlet weak var textFieldPassword: LoginTextField!
     
-    var loginOverlay : ActivityIndicatorOverlay? = nil
+    var loginOverlay : ActivityIndicatorOverlay!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        googleSignInButton.style = GIDSignInButtonStyle.standard
+        googleSignInButton.style = GIDSignInButtonStyle.wide
         googleSignInButton.colorScheme = GIDSignInButtonColorScheme.light
 
         GIDSignIn.sharedInstance().uiDelegate = self
 
         self.loginOverlay = ActivityIndicatorOverlay.init(view: self.view)
-        self.loginOverlay?.onHide = {
+        self.loginOverlay.onHide = {
             () -> Void in
             self.googleSignInButton.isEnabled = true
             self.buttonLogin.isEnabled = true
@@ -34,7 +34,7 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
             self.textFieldEmail.isEnabled = true
             self.textFieldPassword.isEnabled = true
         }
-        self.loginOverlay?.onShow = {
+        self.loginOverlay.onShow = {
             () -> Void in
             self.googleSignInButton.isEnabled = false
             self.buttonLogin.isEnabled = false
@@ -42,12 +42,13 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
             self.textFieldEmail.isEnabled = false
             self.textFieldPassword.isEnabled = false
         }
+        self.loginOverlay.label.text = "Authenticating..."
         
-        self.loginOverlay?.hide()
+        self.loginOverlay.hide()
         
         if GIDSignIn.sharedInstance().hasAuthInKeychain() {
             GIDSignIn.sharedInstance().signInSilently()
-            self.loginOverlay?.show()
+            self.loginOverlay.show()
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.didLogin), name: Notification.Name.GoogleLoginSuccess, object: nil)
@@ -61,13 +62,13 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
         if let loginTextField : LoginTextField = textField as? LoginTextField {
             return loginTextField.resignFirstResponder()
         }
-        
+
         return true
     }
 
     func sign(_ signIn: GIDSignIn!, dismiss viewController: UIViewController!) {
         viewController.dismiss(animated: true, completion: nil)
-        self.loginOverlay?.show()
+        self.loginOverlay.show()
     }
     
     func didLogin() {
@@ -75,6 +76,8 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
         let viewController : UIViewController = storyboard.instantiateInitialViewController()!
         
         self.present(viewController, animated: true, completion: nil)
-        self.loginOverlay?.hide()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.loginOverlay.hide()
+        }
     }
 }

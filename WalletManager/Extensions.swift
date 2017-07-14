@@ -1,5 +1,5 @@
 //
-//  Defines.swift
+//  Extensions.swift
 //  WalletManager
 //
 //  Created by Eric Labaci on 7/14/17.
