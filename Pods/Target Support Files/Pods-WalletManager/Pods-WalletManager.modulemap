@@ -1,0 +1,6 @@
+framework module Pods_WalletManager {
+  umbrella header "Pods-WalletManager-umbrella.h"
+
+  export *
+  module * { export * }
+}

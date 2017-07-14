@@ -9,14 +9,66 @@
 import UIKit
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
-
+class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     var window: UIWindow?
-
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // Initialize sign-in
+        var configureError: NSError?
+        GGLContext.sharedInstance().configureWithError(&configureError)
+        assert(configureError == nil, "Error configuring Google services: \(configureError!)")
+        
+        GIDSignIn.sharedInstance().delegate = self
+        
         return true
+    }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        return GIDSignIn.sharedInstance().handle(url,
+                                                    sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+                                                    annotation: options[UIApplicationOpenURLOptionsKey.annotation])
+    }
+    
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        return GIDSignIn.sharedInstance().handle(url,
+                                                    sourceApplication: sourceApplication,
+                                                    annotation: annotation)
+    }
+    
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
+        if error != nil {
+            print("Login error: \(error!)")
+            return
+        }
+        let name = user.profile.name
+        let givenName = user.profile.givenName
+        let familyName = user.profile.familyName
+        let email = user.profile.email
+        //        let idToken = user.authentication.idToken
+        //        let accessToken = user.authentication.accessToken
+        
+        print("Successful login!\nFull name: \(name!)\nName: \(givenName!)\nFamily name: \(familyName!)\nE-mail: \(email!)\n")
+        
+        
+        NotificationCenter.default.post(name: Notification.Name.GoogleLoginSuccess, object: nil)
+    }
+    
+    @objc func sign(_ signIn: GIDSignIn!, didDisconnectWith user:GIDGoogleUser!, withError error: Error!) {
+        if error != nil {
+            print("Logout error: \(error!)")
+            return
+        }
+        let name = user.profile.name
+        let givenName = user.profile.givenName
+        let familyName = user.profile.familyName
+        let email = user.profile.email
+        //        let idToken = user.authentication.idToken
+        //        let accessToken = user.authentication.accessToken
+        
+        print("Successful logout!\nFull name: \(name!)\nName: \(givenName!)\nFamily name: \(familyName!)\nE-mail: \(email!)\n")
+        
+        
+        NotificationCenter.default.post(name: Notification.Name.GoogleLogoutSuccess, object: nil)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
