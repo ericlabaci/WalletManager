@@ -7,6 +7,8 @@
 //
 
 extension Notification.Name {
-    static let GoogleLoginSuccess = Notification.Name("googleLoginSuccess")
-    static let GoogleLogoutSuccess = Notification.Name("googleLogoutSuccess")
+    static let GoogleLoginSuccess = Notification.Name("GoogleLoginSuccess")
+    static let GoogleLoginFail = Notification.Name("GoogleLoginFail")
+    static let GoogleLogoutSuccess = Notification.Name("GoogleLogoutSuccess")
+    static let GoogleLogoutFail = Notification.Name("GoogleLogoutFail")
 }

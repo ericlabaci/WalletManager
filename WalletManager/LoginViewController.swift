@@ -26,22 +26,6 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
         GIDSignIn.sharedInstance().uiDelegate = self
 
         self.loginOverlay = ActivityIndicatorOverlay.init(view: self.view)
-        self.loginOverlay.onHide = {
-            () -> Void in
-            self.googleSignInButton.isEnabled = true
-            self.buttonLogin.isEnabled = true
-            self.buttonRegister.isEnabled = true
-            self.textFieldEmail.isEnabled = true
-            self.textFieldPassword.isEnabled = true
-        }
-        self.loginOverlay.onShow = {
-            () -> Void in
-            self.googleSignInButton.isEnabled = false
-            self.buttonLogin.isEnabled = false
-            self.buttonRegister.isEnabled = false
-            self.textFieldEmail.isEnabled = false
-            self.textFieldPassword.isEnabled = false
-        }
         self.loginOverlay.label.text = "Authenticating..."
         
         self.loginOverlay.hide()
@@ -51,7 +35,8 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
             self.loginOverlay.show()
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.didLogin), name: Notification.Name.GoogleLoginSuccess, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.loginSuccess), name: Notification.Name.GoogleLoginSuccess, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.loginFail), name: Notification.Name.GoogleLoginFail, object: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -71,7 +56,7 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
         self.loginOverlay.show()
     }
     
-    func didLogin() {
+    func loginSuccess() {
         let storyboard : UIStoryboard = UIStoryboard.init(name: "Main", bundle: nil);
         let viewController : UIViewController = storyboard.instantiateInitialViewController()!
         
@@ -79,5 +64,9 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.loginOverlay.hide()
         }
+    }
+    
+    func loginFail() {
+        self.loginOverlay.hide()
     }
 }

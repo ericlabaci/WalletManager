@@ -17,24 +17,6 @@ class SettingsViewController : UIViewController {
         super.viewDidLoad()
         
         self.loginOverlay = ActivityIndicatorOverlay.init(view: self.view)
-        self.loginOverlay.onHide = {
-            () -> Void in
-            let arrayOfTabBarItems = self.tabBarController?.tabBar.items as AnyObject as? NSArray
-            for tabBarItem in arrayOfTabBarItems! {
-                let item = tabBarItem as? UITabBarItem
-                item!.isEnabled = true
-            }
-            self.buttonLogout.isEnabled = true
-        }
-        self.loginOverlay.onShow = {
-            () -> Void in
-            let arrayOfTabBarItems = self.tabBarController?.tabBar.items as AnyObject as? NSArray
-            for tabBarItem in arrayOfTabBarItems! {
-                let item = tabBarItem as? UITabBarItem
-                item!.isEnabled = false
-            }
-            self.buttonLogout.isEnabled = false
-        }
         self.loginOverlay.label.text = "Logging out..."
         
         self.loginOverlay.hide()
@@ -45,10 +27,20 @@ class SettingsViewController : UIViewController {
     }
     
     @IBAction func logout(_ sender: Any) {
-        GIDSignIn.sharedInstance().disconnect()
-        self.loginOverlay.show()
+        let alert = UIAlertController.init(title: "Are you sure you want to logout?", message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        let okAction = UIAlertAction.init(title: "Logout", style: UIAlertActionStyle.default, handler: {
+            (UIAlertAction) -> Void in
+            GIDSignIn.sharedInstance().disconnect()
+            self.loginOverlay.show()
+            
+            NotificationCenter.default.addObserver(self, selector: #selector(SettingsViewController.didLogout), name: Notification.Name.GoogleLogoutSuccess, object: nil)
+        })
+        let cancelAction = UIAlertAction.init(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(SettingsViewController.didLogout), name: Notification.Name.GoogleLogoutSuccess, object: nil)
+        alert.addAction(okAction)
+        alert.addAction(cancelAction)
+        
+        self.present(alert, animated: true, completion: nil)
     }
     
     func didLogout() {

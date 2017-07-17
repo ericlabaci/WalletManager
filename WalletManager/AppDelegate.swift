@@ -7,18 +7,18 @@
 //
 
 import UIKit
+import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Initialize sign-in
-        var configureError: NSError?
-        GGLContext.sharedInstance().configureWithError(&configureError)
-        assert(configureError == nil, "Error configuring Google services: \(configureError!)")
+        FirebaseApp.configure()
+        //        https://firebase.google.com/docs/auth/ios/google-signin?hl=pt-br
         
         GIDSignIn.sharedInstance().delegate = self
+        GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
         
         return true
     }
@@ -38,37 +38,54 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
         if error != nil {
             print("Login error: \(error!)")
+            NotificationCenter.default.post(name: Notification.Name.GoogleLoginFail, object: nil)
             return
         }
-        let name = user.profile.name
-        let givenName = user.profile.givenName
-        let familyName = user.profile.familyName
-        let email = user.profile.email
-        //        let idToken = user.authentication.idToken
-        //        let accessToken = user.authentication.accessToken
         
-        print("Successful login!\nFull name: \(name!)\nName: \(givenName!)\nFamily name: \(familyName!)\nE-mail: \(email!)\n")
+        guard let authentication = user.authentication else { return }
+        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
+                                                       accessToken: authentication.accessToken)
         
-        
-        NotificationCenter.default.post(name: Notification.Name.GoogleLoginSuccess, object: nil)
+        Auth.auth().signIn(with: credential, completion: {
+            (user, error) in
+            if let error = error {
+                print("Authentication failed with error \(error)")
+                NotificationCenter.default.post(name: Notification.Name.GoogleLoginFail, object: nil)
+                return
+            }
+      
+            let displayName = user?.displayName ?? "No data"
+            let email = user?.email ?? "No data"
+            
+            print("Successful login!\nName: \(displayName)\nE-mail: \(email)")
+            
+            NotificationCenter.default.post(name: Notification.Name.GoogleLoginSuccess, object: nil)
+        })
     }
     
-    @objc func sign(_ signIn: GIDSignIn!, didDisconnectWith user:GIDGoogleUser!, withError error: Error!) {
+    func sign(_ signIn: GIDSignIn!, didDisconnectWith user:GIDGoogleUser!, withError error: Error!) {
         if error != nil {
             print("Logout error: \(error!)")
+            NotificationCenter.default.post(name: Notification.Name.GoogleLogoutFail, object: nil)
             return
         }
-        let name = user.profile.name
-        let givenName = user.profile.givenName
-        let familyName = user.profile.familyName
-        let email = user.profile.email
-        //        let idToken = user.authentication.idToken
-        //        let accessToken = user.authentication.accessToken
         
-        print("Successful logout!\nFull name: \(name!)\nName: \(givenName!)\nFamily name: \(familyName!)\nE-mail: \(email!)\n")
-        
-        
-        NotificationCenter.default.post(name: Notification.Name.GoogleLogoutSuccess, object: nil)
+        let firebaseAuth = Auth.auth()
+        do {
+            let user = Auth.auth().currentUser
+            
+            let displayName = user?.displayName ?? "No data"
+            let email = user?.email ?? "No data"
+            
+            try firebaseAuth.signOut()
+            
+            print("Successful logout!\nName: \(displayName)\nE-mail: \(email)")
+            
+            NotificationCenter.default.post(name: Notification.Name.GoogleLogoutSuccess, object: nil)
+        } catch let signOutError as NSError {
+            print("Error signing out: \(signOutError)")
+            NotificationCenter.default.post(name: Notification.Name.GoogleLogoutFail, object: nil)
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

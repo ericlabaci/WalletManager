@@ -6,7 +6,8 @@ target 'WalletManager' do
   use_frameworks! 
 
   # Pods for WalletManager
-  pod 'Google/SignIn'
+  pod 'Firebase/Auth'
+  pod 'GoogleSignIn'
   #pod 'FBSDKCoreKit'
   #pod 'FBSDKShareKit'
   #pod 'FBSDKLoginKit'
