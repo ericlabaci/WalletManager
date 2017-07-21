@@ -7,15 +7,22 @@
 //
 
 import UIKit
-import Firebase
+import GoogleSignIn
+import FirebaseStorage
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     var window: UIWindow?
     
+    var databaseReference: DatabaseReference!
+    var storageReference: StorageReference!
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
-        //        https://firebase.google.com/docs/auth/ios/google-signin?hl=pt-br
+//        https://github.com/firebase/firechat/blob/master/rules.json
+        
+        self.databaseReference = Database.database().reference()
+        self.storageReference = Storage.storage().reference()
         
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
@@ -24,66 +31,89 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        return GIDSignIn.sharedInstance().handle(url,
-                                                    sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
-                                                    annotation: options[UIApplicationOpenURLOptionsKey.annotation])
+        return GIDSignIn.sharedInstance().handle(url, sourceApplication: options[.sourceApplication] as? String, annotation: options[.annotation])
     }
     
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        return GIDSignIn.sharedInstance().handle(url,
-                                                    sourceApplication: sourceApplication,
-                                                    annotation: annotation)
+        return GIDSignIn.sharedInstance().handle(url, sourceApplication: sourceApplication, annotation: annotation)
     }
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
-        if error != nil {
-            print("Login error: \(error!)")
+        if let error = error {
+            DebugLogger.log("Login error: \(error)")
             NotificationCenter.default.post(name: Notification.Name.GoogleLoginFail, object: nil)
             return
         }
+
+        guard let googleUser = user, let displayName = googleUser.profile.name, let email = googleUser.profile.email else {
+            DebugLogger.log("Failed to get user information")
+            return
+        }
         
-        guard let authentication = user.authentication else { return }
-        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
-                                                       accessToken: authentication.accessToken)
+        let credential = GoogleAuthProvider.credential(withIDToken: googleUser.authentication.idToken, accessToken: googleUser.authentication.accessToken)
         
-        Auth.auth().signIn(with: credential, completion: {
-            (user, error) in
+        DebugLogger.log("Logging in...")
+        Auth.auth().signIn(with: credential, completion: { (user, error) in
             if let error = error {
-                print("Authentication failed with error \(error)")
+                DebugLogger.log("Authentication failed with error \(error)")
                 NotificationCenter.default.post(name: Notification.Name.GoogleLoginFail, object: nil)
                 return
             }
-      
-            let displayName = user?.displayName ?? "No data"
-            let email = user?.email ?? "No data"
             
-            print("Successful login!\nName: \(displayName)\nE-mail: \(email)")
-            
-            NotificationCenter.default.post(name: Notification.Name.GoogleLoginSuccess, object: nil)
+            if let uid = user?.uid {
+                let walletManagerUser = WalletManagerUser(displayName, email, uid, AccountProvider.Google)
+                
+                self.databaseReference?.child("users").child(uid).child("name").setValue(displayName)
+                self.databaseReference?.child("users").child(uid).child("email").setValue(email)
+                self.databaseReference?.child("users").child(uid).child("accountProvider").setValue(AccountProvider.Google)
+                
+                //Check if image exists
+                self.storageReference?.child("users").child(uid).child("profileImage").downloadURL(completion: { (url, error) -> Void in
+                    //If error occurs, image doesn't exist
+                    if error != nil {
+                        DebugLogger.log("Downloading profile image...")
+                        let imageData = try? Data(contentsOf: googleUser.profile.imageURL(withDimension: 64))
+                        DebugLogger.log("Uploading profile image...")
+                        if let imageData = imageData {
+                            self.storageReference?.child("users").child(uid).child("profileImage").putData(imageData, metadata: nil, completion: {(storageMetadata, error) -> Void in
+                                if let error = error {
+                                    DebugLogger.log("Error uploading image: \(error)")
+                                } else {
+                                    DebugLogger.log("Profile image uploaded")
+                                }
+                                DebugLogger.log("Successful login!\nName: \(displayName)\nE-mail: \(email)\nuID: \(uid)")
+                                
+                                NotificationCenter.default.post(name: Notification.Name.GoogleLoginSuccess, object: nil, userInfo: ["walletManagerUser" : walletManagerUser])
+                            })
+                        }
+                    } else {
+                        DebugLogger.log("User already has a profile image")
+                        DebugLogger.log("Successful login!\nName: \(displayName)\nE-mail: \(email)\nuID: \(uid)")
+                        
+                        NotificationCenter.default.post(name: Notification.Name.GoogleLoginSuccess, object: nil, userInfo: ["walletManagerUser" : walletManagerUser])
+                    }
+                })
+            } else {
+                NotificationCenter.default.post(name: Notification.Name.GoogleLoginFail, object: nil)
+            }
         })
     }
     
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user:GIDGoogleUser!, withError error: Error!) {
         if error != nil {
-            print("Logout error: \(error!)")
+            DebugLogger.log("Logout error: \(error!)")
             NotificationCenter.default.post(name: Notification.Name.GoogleLogoutFail, object: nil)
             return
         }
-        
-        let firebaseAuth = Auth.auth()
+
+        DebugLogger.log("Loging out...")
         do {
-            let user = Auth.auth().currentUser
+            try Auth.auth().signOut()
             
-            let displayName = user?.displayName ?? "No data"
-            let email = user?.email ?? "No data"
-            
-            try firebaseAuth.signOut()
-            
-            print("Successful logout!\nName: \(displayName)\nE-mail: \(email)")
-            
+            DebugLogger.log("Successful logout!")
             NotificationCenter.default.post(name: Notification.Name.GoogleLogoutSuccess, object: nil)
         } catch let signOutError as NSError {
-            print("Error signing out: \(signOutError)")
+            DebugLogger.log("Error logging out: \(signOutError)")
             NotificationCenter.default.post(name: Notification.Name.GoogleLogoutFail, object: nil)
         }
     }

@@ -11,9 +11,13 @@
 		F419956D1F192B920055E2AA /* ActivityIndicatorOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419956C1F192B920055E2AA /* ActivityIndicatorOverlay.swift */; };
 		F41995711F1938330055E2AA /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41995701F1938330055E2AA /* SettingsViewController.swift */; };
 		F41995741F193AEC0055E2AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F41995731F193AEC0055E2AA /* Assets.xcassets */; };
-		F41995761F1959D50055E2AA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F41995751F1959D50055E2AA /* GoogleService-Info.plist */; };
+		F421EF781F1FE18F00932642 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F421EF771F1FE18F00932642 /* RegisterViewController.swift */; };
+		F422C4CC1F212BD10085AF63 /* DebugLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F422C4CB1F212BD10085AF63 /* DebugLog.swift */; };
+		F422C4CF1F2133090085AF63 /* WalletManagerUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F422C4CE1F2133090085AF63 /* WalletManagerUser.swift */; };
+		F422C4D11F2139BA0085AF63 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F422C4D01F2139BA0085AF63 /* Constants.swift */; };
+		F46303201F2228CF00ADBF5A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F463031F1F2228CF00ADBF5A /* GoogleService-Info.plist */; };
 		F4AC7B791F17D22A009E0251 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AC7B781F17D22A009E0251 /* AppDelegate.swift */; };
-		F4AC7B7E1F17D22A009E0251 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4AC7B7C1F17D22A009E0251 /* Login.storyboard */; };
+		F4AC7B7E1F17D22A009E0251 /* Authentication.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4AC7B7C1F17D22A009E0251 /* Authentication.storyboard */; };
 		F4AC7B831F17D22A009E0251 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4AC7B811F17D22A009E0251 /* LaunchScreen.storyboard */; };
 		F4AC7B8C1F17D3C7009E0251 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AC7B8B1F17D3C7009E0251 /* LoginViewController.swift */; };
 		F4AC7B8F1F17DA02009E0251 /* LoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AC7B8E1F17DA02009E0251 /* LoginTextField.swift */; };
@@ -29,10 +33,14 @@
 		F419956C1F192B920055E2AA /* ActivityIndicatorOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorOverlay.swift; sourceTree = "<group>"; };
 		F41995701F1938330055E2AA /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		F41995731F193AEC0055E2AA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F41995751F1959D50055E2AA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F421EF771F1FE18F00932642 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		F422C4CB1F212BD10085AF63 /* DebugLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugLog.swift; sourceTree = "<group>"; };
+		F422C4CE1F2133090085AF63 /* WalletManagerUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletManagerUser.swift; sourceTree = "<group>"; };
+		F422C4D01F2139BA0085AF63 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		F463031F1F2228CF00ADBF5A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F4AC7B751F17D22A009E0251 /* WalletManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WalletManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4AC7B781F17D22A009E0251 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F4AC7B7D1F17D22A009E0251 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Login.storyboard; sourceTree = "<group>"; };
+		F4AC7B7D1F17D22A009E0251 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Authentication.storyboard; sourceTree = "<group>"; };
 		F4AC7B821F17D22A009E0251 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F4AC7B841F17D22A009E0251 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F4AC7B8B1F17D3C7009E0251 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -80,6 +88,23 @@
 			name = LaunchScreen;
 			sourceTree = "<group>";
 		};
+		F422C4CD1F2132F90085AF63 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F422C4CE1F2133090085AF63 /* WalletManagerUser.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		F46303211F2234B300ADBF5A /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				F419956C1F192B920055E2AA /* ActivityIndicatorOverlay.swift */,
+				F4AC7B8E1F17DA02009E0251 /* LoginTextField.swift */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
 		F4AC7B6C1F17D22A009E0251 = {
 			isa = PBXGroup;
 			children = (
@@ -101,33 +126,35 @@
 		F4AC7B771F17D22A009E0251 /* WalletManager */ = {
 			isa = PBXGroup;
 			children = (
-				F4AC7B781F17D22A009E0251 /* AppDelegate.swift */,
-				F41995731F193AEC0055E2AA /* Assets.xcassets */,
-				F4AC7B841F17D22A009E0251 /* Info.plist */,
-				F41995751F1959D50055E2AA /* GoogleService-Info.plist */,
+				F4AC7B8A1F17D3AF009E0251 /* Controllers */,
+				F422C4CD1F2132F90085AF63 /* Models */,
+				F46303211F2234B300ADBF5A /* UI */,
 				F4AC7B8D1F17D9F5009E0251 /* Utils */,
-				F4AC7B8A1F17D3AF009E0251 /* View Controllers */,
+				F4AC7B781F17D22A009E0251 /* AppDelegate.swift */,
+				F4AC7B841F17D22A009E0251 /* Info.plist */,
+				F463031F1F2228CF00ADBF5A /* GoogleService-Info.plist */,
+				F4AC7B921F17E0F1009E0251 /* WalletManager-Bridging-Header.h */,
+				F41995731F193AEC0055E2AA /* Assets.xcassets */,
 			);
 			path = WalletManager;
 			sourceTree = "<group>";
 		};
-		F4AC7B8A1F17D3AF009E0251 /* View Controllers */ = {
+		F4AC7B8A1F17D3AF009E0251 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				F41995721F1939170055E2AA /* LaunchScreen */,
 				F4E066C51F190D0C0057C1E5 /* Login */,
 				F4E066C61F190D140057C1E5 /* Main */,
 			);
-			name = "View Controllers";
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 		F4AC7B8D1F17D9F5009E0251 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				F422C4D01F2139BA0085AF63 /* Constants.swift */,
+				F422C4CB1F212BD10085AF63 /* DebugLog.swift */,
 				F4E066C31F190A280057C1E5 /* Extensions.swift */,
-				F419956C1F192B920055E2AA /* ActivityIndicatorOverlay.swift */,
-				F4AC7B8E1F17DA02009E0251 /* LoginTextField.swift */,
-				F4AC7B921F17E0F1009E0251 /* WalletManager-Bridging-Header.h */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -135,8 +162,9 @@
 		F4E066C51F190D0C0057C1E5 /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				F4AC7B7C1F17D22A009E0251 /* Login.storyboard */,
+				F4AC7B7C1F17D22A009E0251 /* Authentication.storyboard */,
 				F4AC7B8B1F17D3C7009E0251 /* LoginViewController.swift */,
+				F421EF771F1FE18F00932642 /* RegisterViewController.swift */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -217,8 +245,8 @@
 			files = (
 				F4AC7B831F17D22A009E0251 /* LaunchScreen.storyboard in Resources */,
 				F4E066CB1F190D690057C1E5 /* Main.storyboard in Resources */,
-				F41995761F1959D50055E2AA /* GoogleService-Info.plist in Resources */,
-				F4AC7B7E1F17D22A009E0251 /* Login.storyboard in Resources */,
+				F46303201F2228CF00ADBF5A /* GoogleService-Info.plist in Resources */,
+				F4AC7B7E1F17D22A009E0251 /* Authentication.storyboard in Resources */,
 				F41995741F193AEC0055E2AA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -279,24 +307,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4E066C91F190D310057C1E5 /* HomeViewController.swift in Sources */,
+				F422C4D11F2139BA0085AF63 /* Constants.swift in Sources */,
 				F4AC7B8F1F17DA02009E0251 /* LoginTextField.swift in Sources */,
+				F422C4CC1F212BD10085AF63 /* DebugLog.swift in Sources */,
 				F41995711F1938330055E2AA /* SettingsViewController.swift in Sources */,
+				F421EF781F1FE18F00932642 /* RegisterViewController.swift in Sources */,
 				F4AC7B8C1F17D3C7009E0251 /* LoginViewController.swift in Sources */,
 				F4E066C41F190A280057C1E5 /* Extensions.swift in Sources */,
 				F4AC7B791F17D22A009E0251 /* AppDelegate.swift in Sources */,
 				F419956D1F192B920055E2AA /* ActivityIndicatorOverlay.swift in Sources */,
+				F422C4CF1F2133090085AF63 /* WalletManagerUser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		F4AC7B7C1F17D22A009E0251 /* Login.storyboard */ = {
+		F4AC7B7C1F17D22A009E0251 /* Authentication.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				F4AC7B7D1F17D22A009E0251 /* Base */,
 			);
-			name = Login.storyboard;
+			name = Authentication.storyboard;
 			sourceTree = "<group>";
 		};
 		F4AC7B811F17D22A009E0251 /* LaunchScreen.storyboard */ = {
@@ -397,6 +429,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;

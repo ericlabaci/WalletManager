@@ -9,15 +9,5 @@
 import UIKit
 
 class LoginTextField : UITextField {
-    @IBOutlet public weak var nextField : LoginTextField!;
-    
-    override func resignFirstResponder() -> Bool {
-        if nextField != nil {
-            nextField.becomeFirstResponder();
-        } else {
-            super.resignFirstResponder();
-        }
-        
-        return true;
-    }
+    @IBOutlet public weak var nextField : LoginTextField!
 }

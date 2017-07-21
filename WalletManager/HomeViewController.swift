@@ -7,34 +7,69 @@
 //
 
 import UIKit
-import Firebase
+import GoogleSignIn
+import FirebaseStorage
 
 class HomeViewController : UIViewController, UITextFieldDelegate {
+    //MARK: - IBOutlets
     @IBOutlet weak var labelDisplayName: UILabel!
     @IBOutlet weak var imageViewProfile: UIImageView!
     @IBOutlet weak var activityProfileImage: UIActivityIndicatorView!
     
+    @IBOutlet weak var labelMessage: UILabel!
+    @IBOutlet weak var textFieldMessage: UITextField!
+    
+    //MARK: - Variables
+    var databaseReference: DatabaseReference!
+    var storageReference: StorageReference!
+    var user: WalletManagerUser!
+    
+    //MARK: - Controller Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let user = Auth.auth().currentUser
-        let imageWidth = imageViewProfile.frame.size.width
-        let imageURL = GIDSignIn.sharedInstance().currentUser.profile.imageURL(withDimension: UInt(imageWidth))
+        self.databaseReference = Database.database().reference().child("users").child(self.user.uid)
+        self.storageReference = Storage.storage().reference().child("users").child(self.user.uid)
         
-        self.labelDisplayName.text = (user?.displayName)!
+        let imageWidth = imageViewProfile.frame.size.width
+
+        self.databaseReference.child("name").observe(.value, with: { (snapshot) in
+            self.labelDisplayName.text = snapshot.value as? String
+        })
+        
         self.imageViewProfile.layer.masksToBounds = true
         self.imageViewProfile.layer.cornerRadius = imageWidth / 2
         
-        DispatchQueue.global().async {
-            let data = try? Data(contentsOf: imageURL!)
-            DispatchQueue.main.sync {
-                self.imageViewProfile.image = UIImage(data: data!)
-                self.activityProfileImage.isHidden = true
+        self.storageReference.child("profileImage").getData(maxSize: 5000000, completion: {(data, error) -> Void in
+            self.activityProfileImage.isHidden = true
+            if let error = error {
+                DebugLogger.log("Profile image download error: \(error.localizedDescription)")
+                return
             }
-        }
+            if let data = data {
+                self.imageViewProfile.image = UIImage(data: data)
+            }
+        })
+        
+        self.databaseReference.child("messages").queryLimited(toLast: 1).observe(.childAdded, with: { (snapshot) in
+            self.labelMessage.text = snapshot.value as? String
+        })
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    //MARK - IBActions
+    @IBAction func sendMessage(_ sender: Any) {
+        self.databaseReference.child("messages").childByAutoId().setValue(self.textFieldMessage.text)
+        self.textFieldMessage.text = ""
+    }
+    
+    //MARK: - Text Field Delegate
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        
+        return true
     }
 }

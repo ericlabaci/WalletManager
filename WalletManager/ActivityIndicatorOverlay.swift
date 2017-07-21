@@ -7,14 +7,14 @@
 //
 
 
-class ActivityIndicatorOverlay : UIView {
-    private var backgroundView : UIView? = nil
-    private var overlayView : UIView? = nil
-    private var activityIndicator : UIActivityIndicatorView? = nil
-    let label : UILabel = UILabel.init()
+class ActivityIndicatorOverlay: UIView {
+    private var backgroundView: UIView? = nil
+    private var overlayView: UIView? = nil
+    private var activityIndicator: UIActivityIndicatorView? = nil
+    let label: UILabel = UILabel.init()
     
-    var onHide :(() -> Void)?
-    var onShow :(() -> Void)?
+    var onHide: (() -> Void)?
+    var onShow: (() -> Void)?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)

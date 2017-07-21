@@ -78,13 +78,42 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q17-Hj-CHh">
+                                <rect key="frame" x="16" y="257" width="288" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sN7-3U-gwl">
+                                <rect key="frame" x="16" y="294" width="288" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nMJ-jo-eAJ">
+                                <rect key="frame" x="109.5" y="340" width="101" height="30"/>
+                                <state key="normal" title="Send Message"/>
+                                <connections>
+                                    <action selector="sendMessage:" destination="R2m-jk-mZF" eventType="touchUpInside" id="c3C-jD-PYF"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="sN7-3U-gwl" firstAttribute="top" secondItem="Q17-Hj-CHh" secondAttribute="bottom" constant="16" id="2XK-6v-n9A"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="sN7-3U-gwl" secondAttribute="trailing" id="Rxy-wB-Ui1"/>
+                            <constraint firstItem="Q17-Hj-CHh" firstAttribute="centerX" secondItem="9ef-8G-5Y8" secondAttribute="centerX" id="S15-fa-r9P"/>
+                            <constraint firstItem="Q17-Hj-CHh" firstAttribute="top" secondItem="0cl-sB-sLh" secondAttribute="bottom" constant="80" id="VWc-dj-zfQ"/>
+                            <constraint firstItem="nMJ-jo-eAJ" firstAttribute="centerX" secondItem="9ef-8G-5Y8" secondAttribute="centerX" id="ZQ6-Vw-wn5"/>
                             <constraint firstItem="nC6-tu-O3W" firstAttribute="centerY" secondItem="1Kf-cD-Ay3" secondAttribute="centerY" id="ZYR-zU-TiZ"/>
+                            <constraint firstItem="Q17-Hj-CHh" firstAttribute="leading" secondItem="9ef-8G-5Y8" secondAttribute="leadingMargin" id="bFW-CR-aFh"/>
                             <constraint firstItem="1Kf-cD-Ay3" firstAttribute="centerX" secondItem="9ef-8G-5Y8" secondAttribute="centerX" id="bpa-Tu-3Ws"/>
+                            <constraint firstItem="sN7-3U-gwl" firstAttribute="leading" secondItem="9ef-8G-5Y8" secondAttribute="leadingMargin" id="es7-cm-M1Z"/>
                             <constraint firstItem="1Kf-cD-Ay3" firstAttribute="top" secondItem="y2M-du-Yd2" secondAttribute="bottom" constant="16" id="f3m-gP-Lyy"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Q17-Hj-CHh" secondAttribute="trailing" id="l4j-Nk-haO"/>
                             <constraint firstItem="0cl-sB-sLh" firstAttribute="centerX" secondItem="1Kf-cD-Ay3" secondAttribute="centerX" id="oKM-NJ-ARL"/>
+                            <constraint firstItem="sN7-3U-gwl" firstAttribute="centerX" secondItem="9ef-8G-5Y8" secondAttribute="centerX" id="tXD-sW-kD3"/>
+                            <constraint firstItem="nMJ-jo-eAJ" firstAttribute="top" secondItem="sN7-3U-gwl" secondAttribute="bottom" constant="16" id="tsY-Ds-PK2"/>
                             <constraint firstItem="0cl-sB-sLh" firstAttribute="top" secondItem="1Kf-cD-Ay3" secondAttribute="bottom" constant="8" id="unv-6g-db9"/>
                             <constraint firstItem="nC6-tu-O3W" firstAttribute="centerX" secondItem="1Kf-cD-Ay3" secondAttribute="centerX" id="ybN-Yl-4xl"/>
                         </constraints>
@@ -94,6 +123,8 @@
                         <outlet property="activityProfileImage" destination="nC6-tu-O3W" id="Scp-4m-szc"/>
                         <outlet property="imageViewProfile" destination="1Kf-cD-Ay3" id="CVL-RK-bPs"/>
                         <outlet property="labelDisplayName" destination="0cl-sB-sLh" id="4SC-mO-6r4"/>
+                        <outlet property="labelMessage" destination="Q17-Hj-CHh" id="utF-HJ-8Wi"/>
+                        <outlet property="textFieldMessage" destination="sN7-3U-gwl" id="GqK-1o-0A7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Iq-eA-8go" userLabel="First Responder" sceneMemberID="firstResponder"/>
