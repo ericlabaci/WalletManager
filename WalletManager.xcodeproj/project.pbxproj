@@ -12,6 +12,7 @@
 		F41995711F1938330055E2AA /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41995701F1938330055E2AA /* SettingsViewController.swift */; };
 		F41995741F193AEC0055E2AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F41995731F193AEC0055E2AA /* Assets.xcassets */; };
 		F421EF781F1FE18F00932642 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F421EF771F1FE18F00932642 /* RegisterViewController.swift */; };
+		F422AAE31F311FCF0063B38F /* FirebaseUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F422AAE21F311FCF0063B38F /* FirebaseUtils.swift */; };
 		F422C4CC1F212BD10085AF63 /* DebugLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F422C4CB1F212BD10085AF63 /* DebugLog.swift */; };
 		F422C4CF1F2133090085AF63 /* WalletManagerUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F422C4CE1F2133090085AF63 /* WalletManagerUser.swift */; };
 		F422C4D11F2139BA0085AF63 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F422C4D01F2139BA0085AF63 /* Constants.swift */; };
@@ -34,6 +35,7 @@
 		F41995701F1938330055E2AA /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		F41995731F193AEC0055E2AA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F421EF771F1FE18F00932642 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		F422AAE21F311FCF0063B38F /* FirebaseUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseUtils.swift; sourceTree = "<group>"; };
 		F422C4CB1F212BD10085AF63 /* DebugLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugLog.swift; sourceTree = "<group>"; };
 		F422C4CE1F2133090085AF63 /* WalletManagerUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletManagerUser.swift; sourceTree = "<group>"; };
 		F422C4D01F2139BA0085AF63 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 				F422C4D01F2139BA0085AF63 /* Constants.swift */,
 				F422C4CB1F212BD10085AF63 /* DebugLog.swift */,
 				F4E066C31F190A280057C1E5 /* Extensions.swift */,
+				F422AAE21F311FCF0063B38F /* FirebaseUtils.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -306,6 +309,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F422AAE31F311FCF0063B38F /* FirebaseUtils.swift in Sources */,
 				F4E066C91F190D310057C1E5 /* HomeViewController.swift in Sources */,
 				F422C4D11F2139BA0085AF63 /* Constants.swift in Sources */,
 				F4AC7B8F1F17DA02009E0251 /* LoginTextField.swift in Sources */,

@@ -32,22 +32,27 @@ class HomeViewController : UIViewController, UITextFieldDelegate {
         self.storageReference = Storage.storage().reference().child("users").child(self.user.uid)
         
         let imageWidth = imageViewProfile.frame.size.width
-
-        self.databaseReference.child("name").observe(.value, with: { (snapshot) in
-            self.labelDisplayName.text = snapshot.value as? String
-        })
         
         self.imageViewProfile.layer.masksToBounds = true
-        self.imageViewProfile.layer.cornerRadius = imageWidth / 2
+        self.imageViewProfile.layer.cornerRadius = imageWidth / 2.0
         
         self.storageReference.child("profileImage").getData(maxSize: 5000000, completion: {(data, error) -> Void in
             self.activityProfileImage.isHidden = true
             if let error = error {
-                DebugLogger.log("Profile image download error: \(error.localizedDescription)")
+                DebugLogger.log("Firebase - Profile image download error: \(error.localizedDescription)")
+                //FIXME: Temporary image
+                self.imageViewProfile.image = UIImage(named: "DefaultProfilePicture")
                 return
             }
             if let data = data {
                 self.imageViewProfile.image = UIImage(data: data)
+            }
+        })
+        
+        self.databaseReference.child("name").observe(.value, with: { (snapshot) in
+            if let displayName = snapshot.value as? String {
+                self.user.displayName = displayName
+                self.labelDisplayName.text = displayName
             }
         })
         
@@ -56,13 +61,17 @@ class HomeViewController : UIViewController, UITextFieldDelegate {
         })
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
     //MARK - IBActions
     @IBAction func sendMessage(_ sender: Any) {
-        self.databaseReference.child("messages").childByAutoId().setValue(self.textFieldMessage.text)
+        self.databaseReference.child("abacaxinaofazxixi").childByAutoId().setValue(self.textFieldMessage.text)
         self.textFieldMessage.text = ""
     }
     

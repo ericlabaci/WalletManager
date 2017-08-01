@@ -15,4 +15,7 @@ target 'WalletManager' do
   #pod 'FBSDKCoreKit'
   #pod 'FBSDKShareKit'
   #pod 'FBSDKLoginKit'
+  
+  #pod 'FacebookCore'
+  #pod 'FacebookLogin'
 end

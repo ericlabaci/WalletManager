@@ -7,7 +7,7 @@
 //
 
 struct AccountProvider {
-    static let Google = "Google"
-    static let Facebook = "Facebook"
-    static let WalletManager = "WalletManager"
+    static let Google: String! = "Google"
+    static let Facebook: String! = "Facebook"
+    static let WalletManager: String! = "WalletManager"
 }

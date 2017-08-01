@@ -18,14 +18,10 @@ class RegisterViewController : UIViewController {
     @IBOutlet weak var textFieldPassword: UITextField!
     @IBOutlet weak var textFieldName: UITextField!
     
-    var delegate: RegisterViewControllerDelegate?
-    
-    var databaseReference: DatabaseReference!
+    var delegate: RegisterViewControllerDelegate? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.databaseReference = Database.database().reference()
     }
     
     @IBAction func register(_ sender: Any) {
@@ -51,7 +47,7 @@ class RegisterViewController : UIViewController {
         
         Auth.auth().createUser(withEmail: self.textFieldEmail.text!, password: self.textFieldPassword.text!, completion: {(user, error) -> Void in
             if let error = error {
-                DebugLogger.log("\(error)")
+                DebugLogger.log("\(error.localizedDescription)")
                 
                 let alertController = UIAlertController(title: "Error creating account", message: error.localizedDescription, preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
@@ -67,11 +63,11 @@ class RegisterViewController : UIViewController {
             let email = user?.email ?? "No data"
             let uid = user?.uid ?? "No uid"
             
-            self.databaseReference.child("users").child(uid).child("name").setValue(displayName)
-            self.databaseReference.child("users").child(uid).child("email").setValue(email)
-            self.databaseReference.child("users").child(uid).child("accountProvider").setValue(AccountProvider.WalletManager)
+            FirebaseUtils.saveUserName(displayName)
+            FirebaseUtils.saveUserEmail(email)
+            FirebaseUtils.saveUserAccountProvider(AccountProvider.WalletManager)
             
-            DebugLogger.log("Successful login!\nName: \(displayName)\nE-mail: \(email)\nuID: \(uid)")
+            DebugLogger.log("Auth - Successful login!\nName: \(displayName)\nE-mail: \(email)\nuID: \(uid)")
             
             self.dismiss(animated: true, completion: nil)
             self.delegate?.didCreateAccount(WalletManagerUser(displayName, email, uid, AccountProvider.WalletManager))

@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     var databaseReference: DatabaseReference!
     var storageReference: StorageReference!
     
+    //MARK: - Class methods
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
 //        https://github.com/firebase/firechat/blob/master/rules.json
@@ -30,94 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         return true
     }
     
-    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        return GIDSignIn.sharedInstance().handle(url, sourceApplication: options[.sourceApplication] as? String, annotation: options[.annotation])
-    }
-    
-    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        return GIDSignIn.sharedInstance().handle(url, sourceApplication: sourceApplication, annotation: annotation)
-    }
-    
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
-        if let error = error {
-            DebugLogger.log("Login error: \(error)")
-            NotificationCenter.default.post(name: Notification.Name.GoogleLoginFail, object: nil)
-            return
-        }
-
-        guard let googleUser = user, let displayName = googleUser.profile.name, let email = googleUser.profile.email else {
-            DebugLogger.log("Failed to get user information")
-            return
-        }
-        
-        let credential = GoogleAuthProvider.credential(withIDToken: googleUser.authentication.idToken, accessToken: googleUser.authentication.accessToken)
-        
-        DebugLogger.log("Logging in...")
-        Auth.auth().signIn(with: credential, completion: { (user, error) in
-            if let error = error {
-                DebugLogger.log("Authentication failed with error \(error)")
-                NotificationCenter.default.post(name: Notification.Name.GoogleLoginFail, object: nil)
-                return
-            }
-            
-            if let uid = user?.uid {
-                let walletManagerUser = WalletManagerUser(displayName, email, uid, AccountProvider.Google)
-                
-                self.databaseReference?.child("users").child(uid).child("name").setValue(displayName)
-                self.databaseReference?.child("users").child(uid).child("email").setValue(email)
-                self.databaseReference?.child("users").child(uid).child("accountProvider").setValue(AccountProvider.Google)
-                
-                //Check if image exists
-                self.storageReference?.child("users").child(uid).child("profileImage").downloadURL(completion: { (url, error) -> Void in
-                    //If error occurs, image doesn't exist
-                    if error != nil {
-                        DebugLogger.log("Downloading profile image...")
-                        let imageData = try? Data(contentsOf: googleUser.profile.imageURL(withDimension: 64))
-                        DebugLogger.log("Uploading profile image...")
-                        if let imageData = imageData {
-                            self.storageReference?.child("users").child(uid).child("profileImage").putData(imageData, metadata: nil, completion: {(storageMetadata, error) -> Void in
-                                if let error = error {
-                                    DebugLogger.log("Error uploading image: \(error)")
-                                } else {
-                                    DebugLogger.log("Profile image uploaded")
-                                }
-                                DebugLogger.log("Successful login!\nName: \(displayName)\nE-mail: \(email)\nuID: \(uid)")
-                                
-                                NotificationCenter.default.post(name: Notification.Name.GoogleLoginSuccess, object: nil, userInfo: ["walletManagerUser" : walletManagerUser])
-                            })
-                        }
-                    } else {
-                        DebugLogger.log("User already has a profile image")
-                        DebugLogger.log("Successful login!\nName: \(displayName)\nE-mail: \(email)\nuID: \(uid)")
-                        
-                        NotificationCenter.default.post(name: Notification.Name.GoogleLoginSuccess, object: nil, userInfo: ["walletManagerUser" : walletManagerUser])
-                    }
-                })
-            } else {
-                NotificationCenter.default.post(name: Notification.Name.GoogleLoginFail, object: nil)
-            }
-        })
-    }
-    
-    func sign(_ signIn: GIDSignIn!, didDisconnectWith user:GIDGoogleUser!, withError error: Error!) {
-        if error != nil {
-            DebugLogger.log("Logout error: \(error!)")
-            NotificationCenter.default.post(name: Notification.Name.GoogleLogoutFail, object: nil)
-            return
-        }
-
-        DebugLogger.log("Loging out...")
-        do {
-            try Auth.auth().signOut()
-            
-            DebugLogger.log("Successful logout!")
-            NotificationCenter.default.post(name: Notification.Name.GoogleLogoutSuccess, object: nil)
-        } catch let signOutError as NSError {
-            DebugLogger.log("Error logging out: \(signOutError)")
-            NotificationCenter.default.post(name: Notification.Name.GoogleLogoutFail, object: nil)
-        }
-    }
-
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
@@ -140,6 +53,113 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
+    //MARK: - Open URL
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        return GIDSignIn.sharedInstance().handle(url, sourceApplication: options[.sourceApplication] as? String, annotation: options[.annotation])
+    }
+    
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        return GIDSignIn.sharedInstance().handle(url, sourceApplication: sourceApplication, annotation: annotation)
+    }
+    
+    //MARK: - Sign in/out
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
+        if let error = error {
+            self.googleLoginFail("Google - Login fail with error: \(error.localizedDescription)")
+            return
+        }
+        
+        //Get google user, display name and e-mail
+        guard let googleUser = user, let displayName = googleUser.profile.name, let email = googleUser.profile.email else {
+            self.googleLoginFail("Google - Failed to get user information")
+            return
+        }
+        
+        let credential = GoogleAuthProvider.credential(withIDToken: googleUser.authentication.idToken, accessToken: googleUser.authentication.accessToken)
+        
+        DebugLogger.log("Google - Logging in...")
+        Auth.auth().signIn(with: credential, completion: { (user, error) in
+            if let error = error {
+                self.googleLoginFail("Google - Authentication failed with error \(error.localizedDescription)")
+                return
+            }
+            
+            guard let uid = user?.uid else {
+                self.googleLoginFail("Google - User has no uid")
+                return
+            }
+            
+            //Create user
+            let walletManagerUser = WalletManagerUser(displayName, email, uid, AccountProvider.Google)
+            
+            //Save user data to firebase
+            FirebaseUtils.saveUserName(displayName)
+            FirebaseUtils.saveUserEmail(email)
+            FirebaseUtils.saveUserAccountProvider(AccountProvider.Google)
+            
+            //Check if image exists
+            DebugLogger.log("Google - Verifying if user has image on firebase")
+            self.storageReference?.child("users").child(uid).child("profileImage").downloadURL(completion: { (url, error) -> Void in
+                //If error occurs, image doesn't exist
+                if error != nil {
+                    //Download profile image data
+                    DebugLogger.log("Google - Downloading profile image")
+                    let imageData = try? Data(contentsOf: googleUser.profile.imageURL(withDimension: 64))
+                    //Upload profile image
+                    DebugLogger.log("Google - Uploading profile image")
+                    if let imageData = imageData {
+                        self.storageReference?.child("users").child(uid).child("profileImage").putData(imageData, metadata: nil, completion: {(storageMetadata, error) -> Void in
+                            if let error = error {
+                                DebugLogger.log("Google - Error uploading image: \(error.localizedDescription)")
+                            } else {
+                                DebugLogger.log("Google - Profile image uploaded")
+                            }
+                            self.googleLoginSuccess("Google - Successful login!\nName: \(displayName)\nE-mail: \(email)\nuID: \(uid)", ["walletManagerUser" : walletManagerUser])
+                        })
+                    }
+                } else {
+                    DebugLogger.log("Google - User already has a profile image")
+                    self.googleLoginSuccess("Google - Successful login!\nName: \(displayName)\nE-mail: \(email)\nuID: \(uid)", ["walletManagerUser" : walletManagerUser])
+                }
+            })
+        })
+    }
+    
+    func sign(_ signIn: GIDSignIn!, didDisconnectWith user:GIDGoogleUser!, withError error: Error!) {
+        if error != nil {
+            self.googleLogoutFail("Google - Logout error: \(error!)")
+            return
+        }
+        
+        DebugLogger.log("Google - Loging out...")
+        do {
+            try Auth.auth().signOut()
+            
+            self.googleLogoutSuccess("Google - Successful logout")
+        } catch let signOutError as NSError {
+            self.googleLogoutFail("Google - Error logging out: \(signOutError)")
+        }
+    }
+    
+    //MARK: - Authentication Notifications
+    func googleLoginSuccess(_ successMessage: String?, _ userInfo: [AnyHashable : Any]?) {
+        DebugLogger.log(successMessage)
+        NotificationCenter.default.post(name: Notification.Name.GoogleLoginSuccess, object: nil, userInfo: userInfo)
+    }
+    
+    func googleLoginFail(_ errorMessage: String?) {
+        DebugLogger.log(errorMessage)
+        NotificationCenter.default.post(name: Notification.Name.GoogleLoginFail, object: nil)
+    }
+    
+    func googleLogoutSuccess(_ successMessage: String?) {
+        DebugLogger.log(successMessage)
+        NotificationCenter.default.post(name: Notification.Name.GoogleLogoutSuccess, object: nil)
+    }
+    
+    func googleLogoutFail(_ errorMessage: String?) {
+        DebugLogger.log(errorMessage)
+        NotificationCenter.default.post(name: Notification.Name.GoogleLogoutFail, object: nil)
+    }
 }
 

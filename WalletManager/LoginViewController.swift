@@ -26,9 +26,11 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
         
         self.databaseReference = Database.database().reference()
         
-        //Set sign in button style
-        googleSignInButton.style = GIDSignInButtonStyle.wide
-        googleSignInButton.colorScheme = GIDSignInButtonColorScheme.light
+        //Set Google sign in button style
+        self.googleSignInButton.style = GIDSignInButtonStyle.wide
+        self.googleSignInButton.colorScheme = GIDSignInButtonColorScheme.light
+        
+        //Set Facebook sign in button style
 
         //Set GoogleSignIn delegate
         GIDSignIn.sharedInstance().uiDelegate = self
@@ -36,13 +38,21 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
         //Initialize LoginOverlay
         self.loginOverlay = ActivityIndicatorOverlay.init(view: self.view)
         self.loginOverlay.label.text = "Signing in..."
-        
         self.loginOverlay.hide()
         
-        //Check if user was signed in with google account
+        //Check if user is already signed in
         if GIDSignIn.sharedInstance().hasAuthInKeychain() {
             GIDSignIn.sharedInstance().signInSilently()
             self.loginOverlay.show()
+        } else if let user = Auth.auth().currentUser {
+            guard let email = user.email else {
+                DebugLogger.log("AutoAuth - Failed to get user info")
+                return
+            }
+            self.loginOverlay.show()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: {() -> Void in
+                self.loginSuccess(WalletManagerUser("", email, user.uid, AccountProvider.WalletManager))
+            })
         }
 
         NotificationCenter.default.addObserver(forName: Notification.Name.GoogleLoginSuccess, object: nil, queue: nil, using: { (notification) -> Void in
@@ -54,6 +64,10 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
         NotificationCenter.default.addObserver(forName: Notification.Name.GoogleLoginFail, object: nil, queue: nil, using: { (notification) -> Void in
             self.loginFail()
         })
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
     
     override func didReceiveMemoryWarning() {
@@ -99,25 +113,25 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
         self.loginOverlay.show()
         
         //Authenticate user
+        DebugLogger.log("Auth - Authenticating with <\(email)>")
         Auth.auth().signIn(withEmail: email, password: password, completion: { (user, error) -> Void in
-            if let error = error as NSError? {
+            //Check if user was authenticated
+            if let error = error {
+                DebugLogger.log("Auth - Authentication failed with error: \(error.localizedDescription)")
+                
                 self.loginOverlay.hide()
                 
                 alertController.message = error.localizedDescription
                 self.present(alertController, animated: true, completion: nil)
             } else {
+                DebugLogger.log("Auth - Authentication successful")
+                //Get e-mail and uid
                 guard let email = user?.email, let uid = user?.uid else {
-                    DebugLogger.log("Failed to get user info")
+                    DebugLogger.log("Auth - Failed to get user info")
                     return
                 }
                 
-                self.databaseReference.child("users").child((user?.uid)!).child("name").observeSingleEvent(of: .value, with: { (dataSnapshot) -> Void in
-                    if let displayName = dataSnapshot.value as? String {
-                        self.loginSuccess(WalletManagerUser(displayName, email, uid, AccountProvider.WalletManager))
-                    } else {
-                        DebugLogger.log("Failed to get user name")
-                    }
-                })
+                self.loginSuccess(WalletManagerUser("", email, uid, AccountProvider.WalletManager))
             }
         })
     }
@@ -136,35 +150,58 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
         return true
     }
 
-    //MARK: - GIDSignInUIDelegate
+    //MARK: - GIDSignInUI Delegate
     func sign(_ signIn: GIDSignIn!, dismiss viewController: UIViewController!) {
         viewController.dismiss(animated: true, completion: nil)
         self.loginOverlay.show()
     }
     
-    //MARK: - RegisterViewControllerDelegate
+    //MARK: - RegisterViewController Delegate
     func didCreateAccount(_ user: WalletManagerUser) {
         self.loginOverlay.show()
-        self.loginSuccess(user)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: { () -> Void in
+            self.loginSuccess(user)
+        })
     }
     
-    //MARK: - Login methods
+    //MARK: - Login
     func loginSuccess(_ user: WalletManagerUser) {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         guard let tabBarController = storyboard.instantiateInitialViewController(),
               let homeVC = tabBarController.childViewControllers[0].childViewControllers[0] as? HomeViewController,
-              let settingsVC = tabBarController.childViewControllers[0].childViewControllers[0] as? HomeViewController else {
+              let settingsVC = tabBarController.childViewControllers[2].childViewControllers[0] as? SettingsViewController else {
             return
         }
         
         homeVC.user = user
+        settingsVC.user = user
         self.present(tabBarController, animated: true, completion: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
             self.loginOverlay.hide()
+            self.textFieldEmail.text = ""
+            self.textFieldPassword.text = ""
         }
     }
     
     func loginFail() {
         self.loginOverlay.hide()
+    }
+    
+    //FIXME: Fix async process
+    func isEmailRegistered(_ email: String!, _ completion: @escaping (Bool) -> Void) -> Void {
+        //Get number of providers (if providers == 0 account doesn't exist?)
+        DebugLogger.log("Fetching...")
+        Auth.auth().fetchProviders(forEmail: email, completion: { (array, error) -> Void in
+            if let error = error {
+                DebugLogger.log("Fetching providers error: \(error.localizedDescription)")
+                completion(false)
+                return
+            }
+            if let array = array {
+                completion(array.count > 0)
+            } else {
+                completion(false)
+            }
+        })
     }
 }
