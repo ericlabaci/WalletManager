@@ -161,6 +161,8 @@ class LoginTextFieldView: UIView {
             self.loginTextField.nextField = loginTextFieldView.loginTextField
         } else if let loginTextField = next as? LoginTextField {
             self.loginTextField.nextField = loginTextField
+        } else {
+            self.loginTextField.nextField = nil
         }
     }
     

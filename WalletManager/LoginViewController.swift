@@ -15,13 +15,19 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var emailTextFieldView: LoginTextFieldView!
     @IBOutlet weak var passwordTextFieldView: LoginTextFieldView!
+    @IBOutlet weak var passwordRepeatTextFieldView: LoginTextFieldView!
     @IBOutlet weak var nameTextFieldView: LoginTextFieldView!
+    @IBOutlet weak var invalidEmailLabel: UILabel!
+    @IBOutlet weak var passwordInvalidEmailLabel: UILabel!
     
     @IBOutlet weak var googleSignInView: UIView!
     @IBOutlet weak var registerFieldsView: UIView!
     
     //MARK: - Constraints
     @IBOutlet weak var emailViewCenterYConstraint: NSLayoutConstraint!
+    @IBOutlet weak var passwordViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var passwordRepeatTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var nameViewTopConstraint: NSLayoutConstraint!
     
     //MARK: - Variables
     var loginOverlay: ActivityIndicatorOverlay!
@@ -30,6 +36,9 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
     
     //MARK: - Original Values
     var emailViewCenterYOriginalConstant: CGFloat!
+    var passwordViewTopOriginalConstant: CGFloat!
+    var passwordRepeatViewTopOriginalConstant: CGFloat!
+    
     var loginButtonLabelTextOriginal: String!
     var registerButtonLabelTextOriginal: String!
 
@@ -40,48 +49,62 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
         self.backgroundImageView.alpha = 1.0
         self.backgroundImageView.addBlurEffect()
         
+        //Removing background color from views (they have bg color to make it easier to work with on IB)
         self.emailTextFieldView.backgroundColor = UIColor.clear
         self.passwordTextFieldView.backgroundColor = UIColor.clear
         self.googleSignInView.backgroundColor = UIColor.clear
         self.registerFieldsView.backgroundColor = UIColor.clear
+        self.nameTextFieldView.backgroundColor = UIColor.clear
+        self.passwordRepeatTextFieldView.backgroundColor = UIColor.clear
         self.registerFieldsView.alpha = 0.0
         
+        self.invalidEmailLabel.alpha = 0.0
+        self.passwordInvalidEmailLabel.alpha = 0.0
+        
         self.emailViewCenterYOriginalConstant = self.emailViewCenterYConstraint.constant
+        self.passwordViewTopOriginalConstant = self.passwordViewTopConstraint.constant
+        self.passwordRepeatViewTopOriginalConstant = self.passwordViewTopConstraint.constant
         
         self.loginButtonLabelTextOriginal = self.loginButton.title(for: .normal)
         self.registerButtonLabelTextOriginal = self.registerButton.title(for: .normal)
         
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(closeKeyboard)))
         
-        let emailTextFieldViewDictionary: [LoginTextFieldViewProperties : Any?] = [.PlaceholderText : "E-mail",
-                                                                                  .Icon : UIImage(named: "EmailLoginIcon") as Any,
-                                                                                  .KeyboardType : UIKeyboardType.emailAddress as Any,
-                                                                                  .ReturnKey: UIReturnKeyType.next as Any,
-                                                                                  .Secure : false,
-                                                                                  .TextFieldNext : self.passwordTextFieldView,
-                                                                                  .TextFieldDelegate : self,
-                                                                                  .TextFieldIdentifier : "E-mail"];
-        self.emailTextFieldView.setProperties(emailTextFieldViewDictionary)
+        self.emailTextFieldView.setProperties([.PlaceholderText : "E-mail",
+                                               .Icon : UIImage(named: "EmailLoginIcon") as Any,
+                                               .KeyboardType : UIKeyboardType.emailAddress as Any,
+                                               .ReturnKey: UIReturnKeyType.next as Any,
+                                               .Secure : false,
+                                               .TextFieldNext : self.passwordTextFieldView,
+                                               .TextFieldDelegate : self,
+                                               .TextFieldIdentifier : "E-mail"])
         
-        let passwordTextFieldViewDictionary: [LoginTextFieldViewProperties : Any?] = [.PlaceholderText : "Password",
-                                                                                      .Icon : UIImage(named: "PasswordLoginIcon") as Any,
-                                                                                      .KeyboardType : UIKeyboardType.default as Any,
-                                                                                      .ReturnKey: UIReturnKeyType.go as Any,
-                                                                                      .Secure : true,
-                                                                                      .TextFieldNext : nil,
-                                                                                      .TextFieldDelegate : self,
-                                                                                      .TextFieldIdentifier : "Password"];
-        self.passwordTextFieldView.setProperties(passwordTextFieldViewDictionary)
+        self.passwordTextFieldView.setProperties([.PlaceholderText : "Password",
+                                                  .Icon : UIImage(named: "PasswordLoginIcon") as Any,
+                                                  .KeyboardType : UIKeyboardType.default as Any,
+                                                  .ReturnKey: UIReturnKeyType.go as Any,
+                                                  .Secure : true,
+                                                  .TextFieldNext : nil,
+                                                  .TextFieldDelegate : self,
+                                                  .TextFieldIdentifier : "Password"])
         
-        let nameTextFieldViewDictionary: [LoginTextFieldViewProperties : Any?] = [.PlaceholderText : "Name",
-                                                                                  .Icon : nil,
-                                                                                  .KeyboardType : UIKeyboardType.default as Any,
-                                                                                  .ReturnKey: UIReturnKeyType.go as Any,
-                                                                                  .Secure : false,
-                                                                                  .TextFieldNext : nil,
-                                                                                  .TextFieldDelegate : self,
-                                                                                  .TextFieldIdentifier : "Name"];
-        self.nameTextFieldView.setProperties(nameTextFieldViewDictionary)
+        self.passwordRepeatTextFieldView.setProperties([.PlaceholderText : "Repeat password",
+                                                  .Icon : UIImage(named: "PasswordLoginIcon") as Any,
+                                                  .KeyboardType : UIKeyboardType.default as Any,
+                                                  .ReturnKey: UIReturnKeyType.next as Any,
+                                                  .Secure : true,
+                                                  .TextFieldNext : self.nameTextFieldView,
+                                                  .TextFieldDelegate : self,
+                                                  .TextFieldIdentifier : "PasswordRepeat"])
+        
+        self.nameTextFieldView.setProperties([.PlaceholderText : "Name",
+                                              .Icon : nil,
+                                              .KeyboardType : UIKeyboardType.default as Any,
+                                              .ReturnKey: UIReturnKeyType.go as Any,
+                                              .Secure : false,
+                                              .TextFieldNext : nil,
+                                              .TextFieldDelegate : self,
+                                              .TextFieldIdentifier : "Name"])
 
         //Set GoogleSignIn delegate
         GIDSignIn.sharedInstance().uiDelegate = self
@@ -287,9 +310,40 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
     func textFieldDidEndEditing(_ textField: UITextField) {
         if let loginTextField = textField as? LoginTextField {
             if loginTextField.identifier == "E-mail" {
-                self.IsEmailRegistered(loginTextField.text, { (registered) -> Void in
-                    self.setRegistering(!registered)
+                self.isEmailRegistered(loginTextField.text, { (registered, error) -> Void in
+                    if let error = error as NSError? {
+                        guard let errorCode = AuthErrorCode(rawValue: error.code) else {
+                            return
+                        }
+                        switch errorCode {
+                        case AuthErrorCode.invalidEmail:
+                            if let isEmpty = loginTextField.text?.isEmpty {
+                                self.setInvalidEmail(!isEmpty)
+                            }
+                            break
+                            
+                        default:
+                            break
+                        }
+                    } else {
+                        if let registered = registered {
+                            self.setInvalidEmail(false)
+                            self.setRegistering(!registered)
+                        }
+                    }
+                    
+                    
                 })
+            } else if loginTextField.identifier == "PasswordRepeat" {
+                guard let password = self.passwordTextFieldView.getText(),
+                      let passwordRepeat = loginTextField.text else {
+                        return
+                }
+                if password.isEmpty || passwordRepeat.isEmpty {
+                    self.setUnmatchingPasswords(false)
+                } else {
+                    self.setUnmatchingPasswords(password != passwordRepeat)
+                }
             }
         }
     }
@@ -322,6 +376,7 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
             self.loginOverlay.hide()
             self.emailTextFieldView.setText("")
             self.passwordTextFieldView.setText("")
+            self.passwordRepeatTextFieldView.setText("")
             self.nameTextFieldView.setText("")
         }
     }
@@ -331,20 +386,20 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
     }
     
     //MARK: - E-mail
-    func IsEmailRegistered(_ email: String!, _ completion: @escaping (Bool) -> Void) -> Void {
-        //Get number of providers (if providers == 0 account doesn't exist?)
+    func isEmailRegistered(_ email: String!, _ completion: @escaping (Bool?, Error?) -> Void) -> Void {
         DebugLogger.log("Fetching...")
         Auth.auth().fetchProviders(forEmail: email, completion: { (array, error) -> Void in
             if let error = error {
                 DebugLogger.log("Fetching providers error: \(error.localizedDescription)")
+                completion(nil, error)
                 return
             }
             if let array = array {
                 DebugLogger.log("Fetched \(array.count) provider(s)")
-                completion(array.count > 0)
+                completion(array.count > 0, nil)
             } else {
                 DebugLogger.log("No providers fetched")
-                completion(false)
+                completion(false, nil)
             }
         })
     }
@@ -360,9 +415,10 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
             
             self.registerButton.setTitle("Cancel", for: .normal)
             
-            self.passwordTextFieldView.setNextTextField(self.nameTextFieldView)
+            self.passwordTextFieldView.setNextTextField(self.passwordRepeatTextFieldView)
             self.passwordTextFieldView.setReturnKey(.next)
             
+            self.passwordRepeatTextFieldView.setText("")
             self.nameTextFieldView.setText("")
         } else {
             self.emailViewCenterYConstraint.constant = self.emailViewCenterYOriginalConstant
@@ -372,6 +428,9 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
             
             self.passwordTextFieldView.setNextTextField(nil)
             self.passwordTextFieldView.setReturnKey(.go)
+            if self.nameTextFieldView.loginTextField.isFirstResponder {
+                self.nameTextFieldView.loginTextField.resignFirstResponder()
+            }
         }
         self.passwordTextFieldView.loginTextField.reloadInputViews()
         UIView.animate(withDuration: duration, animations: { () -> Void in
@@ -391,5 +450,41 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
                 }
             })
         })
+    }
+    
+    func setInvalidEmail(_ invalid: Bool) {
+        let duration = 0.6
+        
+        if invalid {
+            self.passwordViewTopConstraint.constant = 16
+            UIView.animate(withDuration: duration, animations: { () -> Void in
+                self.invalidEmailLabel.alpha = 1.0
+                self.view.layoutIfNeeded()
+            })
+        } else {
+            self.passwordViewTopConstraint.constant = self.passwordViewTopOriginalConstant
+            UIView.animate(withDuration: duration, animations: { () -> Void in
+                self.invalidEmailLabel.alpha = 0.0
+                self.view.layoutIfNeeded()
+            })
+        }
+    }
+    
+    func setUnmatchingPasswords(_ unmatching: Bool) {
+        let duration = 0.6
+        
+        if unmatching {
+            self.passwordRepeatTopConstraint.constant = 16
+            UIView.animate(withDuration: duration, animations: { () -> Void in
+                self.passwordInvalidEmailLabel.alpha = 1.0
+                self.view.layoutIfNeeded()
+            })
+        } else {
+            self.passwordRepeatTopConstraint.constant = self.passwordViewTopOriginalConstant
+            UIView.animate(withDuration: duration, animations: { () -> Void in
+                self.passwordInvalidEmailLabel.alpha = 0.0
+                self.view.layoutIfNeeded()
+            })
+        }
     }
 }
