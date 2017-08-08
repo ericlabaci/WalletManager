@@ -230,12 +230,22 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
     func register() {
         guard let email = self.emailTextFieldView.getText(),
               let password = self.passwordTextFieldView.getText(),
+              let passwordRepeat = self.passwordRepeatTextFieldView.getText(),
               let name = self.nameTextFieldView.getText() else {
               return
         }
         
         if email.characters.count <= 0 {
             let alertController = UIAlertController(title: "Error creating account", message: "Please enter an e-mail.", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+            
+            alertController.addAction(okAction)
+            
+            self.present(alertController, animated: true, completion: nil)
+            
+            return
+        } else if password != passwordRepeat {
+            let alertController = UIAlertController(title: "Error creating account", message: "Passwords must match.", preferredStyle: .alert)
             let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
             
             alertController.addAction(okAction)
