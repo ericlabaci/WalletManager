@@ -59,8 +59,8 @@ class SettingsViewController : UIViewController {
             self.loginOverlay.show()
             
             do {
-                self.databaseReference.child("users").child(self.user.uid).child("name").removeAllObservers()
-                self.databaseReference.child("users").child(self.user.uid).child("messages").removeAllObservers()
+                self.databaseReference.child("users").child(FirebaseUtils.getUID() ?? "").child("name").removeAllObservers()
+                self.databaseReference.child("users").child(FirebaseUtils.getUID() ?? "").child("messages").removeAllObservers()
 
                 switch self.user.accountProvider {
                 case AccountProvider.Facebook:

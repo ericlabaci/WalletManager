@@ -90,38 +90,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             }
             
             //Create user
-            let walletManagerUser = WalletManagerUser(displayName, email, uid, AccountProvider.Google)
+            let walletManagerUser = WalletManagerUser(displayName, email, AccountProvider.Google)
             
             //Save user data to firebase
             FirebaseUtils.saveUserName(displayName)
             FirebaseUtils.saveUserEmail(email)
             FirebaseUtils.saveUserAccountProvider(AccountProvider.Google)
             
-            //Check if image exists
-            DebugLogger.log("Google - Verifying if user has image on firebase")
-            self.storageReference?.child("users").child(uid).child("profileImage").downloadURL(completion: { (url, error) -> Void in
-                //If error occurs, image doesn't exist
-                if error != nil {
-                    //Download profile image data
-                    DebugLogger.log("Google - Downloading profile image")
-                    let imageData = try? Data(contentsOf: googleUser.profile.imageURL(withDimension: 64))
-                    //Upload profile image
-                    DebugLogger.log("Google - Uploading profile image")
-                    if let imageData = imageData {
-                        self.storageReference?.child("users").child(uid).child("profileImage").putData(imageData, metadata: nil, completion: {(storageMetadata, error) -> Void in
-                            if let error = error {
-                                DebugLogger.log("Google - Error uploading image: \(error.localizedDescription)")
-                            } else {
-                                DebugLogger.log("Google - Profile image uploaded")
-                            }
-                            self.googleLoginSuccess("Google - Successful login!\nName: \(displayName)\nE-mail: \(email)\nuID: \(uid)", ["walletManagerUser" : walletManagerUser])
-                        })
-                    }
-                } else {
-                    DebugLogger.log("Google - User already has a profile image")
-                    self.googleLoginSuccess("Google - Successful login!\nName: \(displayName)\nE-mail: \(email)\nuID: \(uid)", ["walletManagerUser" : walletManagerUser])
-                }
-            })
+            self.googleLoginSuccess("Google - Successful login!\nName: \(displayName)\nE-mail: \(email)\nuID: \(uid)", ["walletManagerUser" : walletManagerUser])
         })
     }
     

@@ -28,28 +28,50 @@ class HomeViewController : UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.databaseReference = Database.database().reference().child("users").child(self.user.uid)
-        self.storageReference = Storage.storage().reference().child("users").child(self.user.uid)
+        self.databaseReference = Database.database().reference().child("users").child(FirebaseUtils.getUID() ?? "")
+        self.storageReference = Storage.storage().reference().child("users").child(FirebaseUtils.getUID() ?? "")
         
         let imageWidth = imageViewProfile.frame.size.width
         
         self.imageViewProfile.layer.masksToBounds = true
         self.imageViewProfile.layer.cornerRadius = imageWidth / 2.0
         
-        self.storageReference.child("profileImage").getData(maxSize: 5000000, completion: {(data, error) -> Void in
-            self.activityProfileImage.isHidden = true
-            if let error = error {
-                DebugLogger.log("Firebase - Profile image download error: \(error.localizedDescription)")
-                //FIXME: Temporary image
-                self.imageViewProfile.image = UIImage(named: "DefaultProfilePicture")
-                return
-            }
-            if let data = data {
-                self.imageViewProfile.image = UIImage(data: data)
-            }
-        })
+        self.labelDisplayName.text = user.displayName
         
-        self.databaseReference.child("name").observe(.value, with: { (snapshot) in
+        if user.accountProvider == AccountProvider.Google {
+            //Check if image exists
+            DebugLogger.log("Google - Verifying if user has image on firebase")
+            self.storageReference?.child("profileImage").downloadURL(completion: { (url, error) -> Void in
+                //If error occurs, image doesn't exist
+                if error != nil {
+                    //Download profile image data
+                    DebugLogger.log("Google - Downloading profile image")
+                    let imageData = try? Data(contentsOf: GIDSignIn.sharedInstance().currentUser.profile.imageURL(withDimension: 64))
+                    if let imageData = imageData {
+                        self.imageViewProfile.image = UIImage(data: imageData)
+                        self.activityProfileImage.isHidden = true
+                        //Upload to firebase
+                        DebugLogger.log("Google - Uploading profile image")
+                        self.storageReference?.child("profileImage").putData(imageData, metadata: nil, completion: {(storageMetadata, error) -> Void in
+                            if let error = error {
+                                DebugLogger.log("Google - Error uploading image: \(error.localizedDescription)")
+                            } else {
+                                DebugLogger.log("Google - Profile image uploaded")
+                            }
+                        })
+                    } else {
+                        DebugLogger.log("Google - Failed to download profile image")
+                    }
+                } else {
+                    DebugLogger.log("Google - User already has a profile image")
+                    self.getUserProfileImage()
+                }
+            })
+        } else {
+            self.getUserProfileImage()
+        }
+        
+        FirebaseUtils.observeUserName(with: { (snapshot) in
             if let displayName = snapshot.value as? String {
                 self.user.displayName = displayName
                 self.labelDisplayName.text = displayName
@@ -71,7 +93,7 @@ class HomeViewController : UIViewController, UITextFieldDelegate {
     
     //MARK - IBActions
     @IBAction func sendMessage(_ sender: Any) {
-        self.databaseReference.child("abacaxinaofazxixi").childByAutoId().setValue(self.textFieldMessage.text)
+        self.databaseReference.child("name").child("123123").childByAutoId().setValue(self.textFieldMessage.text)
         self.textFieldMessage.text = ""
     }
     
@@ -80,5 +102,20 @@ class HomeViewController : UIViewController, UITextFieldDelegate {
         textField.resignFirstResponder()
         
         return true
+    }
+    
+    //MARK: - Helpers
+    func getUserProfileImage() {
+        FirebaseUtils.loadUserProfileImage({ (data, error) -> Void in
+            self.activityProfileImage.isHidden = true
+            if error != nil {
+                //FIXME: Temporary image
+                self.imageViewProfile.image = UIImage(named: "DefaultProfilePicture")
+                return
+            }
+            if let data = data {
+                self.imageViewProfile.image = UIImage(data: data)
+            }
+        })
     }
 }

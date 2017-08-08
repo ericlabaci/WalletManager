@@ -8,50 +8,102 @@
 
 import UIKit
 
-class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDelegate, RegisterViewControllerDelegate {
+class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControllerTransitioningDelegate, GIDSignInUIDelegate {
     //MARK: - IBOutlets
-    @IBOutlet weak var googleSignInButton: GIDSignInButton!
-    @IBOutlet weak var buttonLogin: UIButton!
-    @IBOutlet weak var buttonRegister: UIButton!
-    @IBOutlet weak var textFieldEmail: LoginTextField!
-    @IBOutlet weak var textFieldPassword: LoginTextField!
+    @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var registerButton: UIButton!
+    @IBOutlet weak var backgroundImageView: UIImageView!
+    @IBOutlet weak var emailTextFieldView: LoginTextFieldView!
+    @IBOutlet weak var passwordTextFieldView: LoginTextFieldView!
+    @IBOutlet weak var nameTextFieldView: LoginTextFieldView!
+    
+    @IBOutlet weak var googleSignInView: UIView!
+    @IBOutlet weak var registerFieldsView: UIView!
+    
+    //MARK: - Constraints
+    @IBOutlet weak var emailViewCenterYConstraint: NSLayoutConstraint!
     
     //MARK: - Variables
     var loginOverlay: ActivityIndicatorOverlay!
-    var databaseReference: DatabaseReference!
+    
+    var isRegistering: Bool = false
+    
+    //MARK: - Original Values
+    var emailViewCenterYOriginalConstant: CGFloat!
+    var loginButtonLabelTextOriginal: String!
+    var registerButtonLabelTextOriginal: String!
 
     //MARK: - Controller Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.databaseReference = Database.database().reference()
+        self.backgroundImageView.alpha = 1.0
+        self.backgroundImageView.addBlurEffect()
         
-        //Set Google sign in button style
-        self.googleSignInButton.style = GIDSignInButtonStyle.wide
-        self.googleSignInButton.colorScheme = GIDSignInButtonColorScheme.light
+        self.emailTextFieldView.backgroundColor = UIColor.clear
+        self.passwordTextFieldView.backgroundColor = UIColor.clear
+        self.googleSignInView.backgroundColor = UIColor.clear
+        self.registerFieldsView.backgroundColor = UIColor.clear
+        self.registerFieldsView.alpha = 0.0
         
-        //Set Facebook sign in button style
+        self.emailViewCenterYOriginalConstant = self.emailViewCenterYConstraint.constant
+        
+        self.loginButtonLabelTextOriginal = self.loginButton.title(for: .normal)
+        self.registerButtonLabelTextOriginal = self.registerButton.title(for: .normal)
+        
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(closeKeyboard)))
+        
+        let emailTextFieldViewDictionary: [LoginTextFieldViewProperties : Any?] = [.PlaceholderText : "E-mail",
+                                                                                  .Icon : UIImage(named: "EmailLoginIcon") as Any,
+                                                                                  .KeyboardType : UIKeyboardType.emailAddress as Any,
+                                                                                  .ReturnKey: UIReturnKeyType.next as Any,
+                                                                                  .Secure : false,
+                                                                                  .TextFieldNext : self.passwordTextFieldView,
+                                                                                  .TextFieldDelegate : self,
+                                                                                  .TextFieldIdentifier : "E-mail"];
+        self.emailTextFieldView.setProperties(emailTextFieldViewDictionary)
+        
+        let passwordTextFieldViewDictionary: [LoginTextFieldViewProperties : Any?] = [.PlaceholderText : "Password",
+                                                                                      .Icon : UIImage(named: "PasswordLoginIcon") as Any,
+                                                                                      .KeyboardType : UIKeyboardType.default as Any,
+                                                                                      .ReturnKey: UIReturnKeyType.go as Any,
+                                                                                      .Secure : true,
+                                                                                      .TextFieldNext : nil,
+                                                                                      .TextFieldDelegate : self,
+                                                                                      .TextFieldIdentifier : "Password"];
+        self.passwordTextFieldView.setProperties(passwordTextFieldViewDictionary)
+        
+        let nameTextFieldViewDictionary: [LoginTextFieldViewProperties : Any?] = [.PlaceholderText : "Name",
+                                                                                  .Icon : nil,
+                                                                                  .KeyboardType : UIKeyboardType.default as Any,
+                                                                                  .ReturnKey: UIReturnKeyType.go as Any,
+                                                                                  .Secure : false,
+                                                                                  .TextFieldNext : nil,
+                                                                                  .TextFieldDelegate : self,
+                                                                                  .TextFieldIdentifier : "Name"];
+        self.nameTextFieldView.setProperties(nameTextFieldViewDictionary)
 
         //Set GoogleSignIn delegate
         GIDSignIn.sharedInstance().uiDelegate = self
 
         //Initialize LoginOverlay
         self.loginOverlay = ActivityIndicatorOverlay.init(view: self.view)
-        self.loginOverlay.label.text = "Signing in..."
         self.loginOverlay.hide()
         
         //Check if user is already signed in
         if GIDSignIn.sharedInstance().hasAuthInKeychain() {
             GIDSignIn.sharedInstance().signInSilently()
+            self.loginOverlay.label.text = "Logging in..."
             self.loginOverlay.show()
         } else if let user = Auth.auth().currentUser {
             guard let email = user.email else {
                 DebugLogger.log("AutoAuth - Failed to get user info")
                 return
             }
+            self.loginOverlay.label.text = "Logging in..."
             self.loginOverlay.show()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: {() -> Void in
-                self.loginSuccess(WalletManagerUser("", email, user.uid, AccountProvider.WalletManager))
+                self.loginSuccess(WalletManagerUser("", email, AccountProvider.WalletManager))
             })
         }
 
@@ -74,23 +126,36 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
         super.didReceiveMemoryWarning()
     }
     
-    //MARK: - Segue
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "RegisterViewControllerSegue" {
-            let vc = segue.destination as? RegisterViewController
-            vc?.delegate = self
+    //MARK: - IBActions
+    @IBAction func loginButtonAction(_ sender: Any) {
+        if self.isRegistering {
+            register()
+        } else {
+            login()
         }
     }
     
-    //MARK: - IBActions
-    @IBAction func login() {
+    @IBAction func registerButtonAction(_ sender: Any) {
+        self.setRegistering(!self.isRegistering)
+    }
+    
+    @IBAction func googleSignIn(_ sender: Any) {
+        GIDSignIn.sharedInstance().signIn()
+    }
+    
+    @IBAction func facebookSignIn(_ sender: Any) {
+        DebugLogger.log("Todo: Facebook SignIn")
+    }
+    
+    //MARK: - Buttons
+    func login() {
         let alertController = UIAlertController(title: "Error signing in", message: "", preferredStyle: .alert)
         let actionOK = UIAlertAction(title: "Ok", style: .default, handler: nil)
         
         alertController.addAction(actionOK)
         
         //Unwrap email and password
-        guard let email = self.textFieldEmail.text, let password = self.textFieldPassword.text else {
+        guard let email = self.emailTextFieldView.getText(), let password = self.passwordTextFieldView.getText() else {
             alertController.message = "An unexpected error ocurred. Please try again."
             self.present(alertController, animated: true, completion: nil)
             return
@@ -110,6 +175,7 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
             return
         }
         
+        self.loginOverlay.label.text = "Logging in..."
         self.loginOverlay.show()
         
         //Authenticate user
@@ -126,42 +192,118 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
             } else {
                 DebugLogger.log("Auth - Authentication successful")
                 //Get e-mail and uid
-                guard let email = user?.email, let uid = user?.uid else {
+                guard let email = user?.email else {
                     DebugLogger.log("Auth - Failed to get user info")
                     return
                 }
                 
-                self.loginSuccess(WalletManagerUser("", email, uid, AccountProvider.WalletManager))
+                FirebaseUtils.loadUserName({ (name) -> Void in
+                    self.loginSuccess(WalletManagerUser(name ?? "", email, AccountProvider.WalletManager))
+                })
             }
         })
     }
     
+    func register() {
+        guard let email = self.emailTextFieldView.getText(),
+              let password = self.passwordTextFieldView.getText(),
+              let name = self.nameTextFieldView.getText() else {
+              return
+        }
+        
+        if email.characters.count <= 0 {
+            let alertController = UIAlertController(title: "Error creating account", message: "Please enter an e-mail.", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+            
+            alertController.addAction(okAction)
+            
+            self.present(alertController, animated: true, completion: nil)
+            
+            return
+        } else if name.characters.count <= 0 {
+            let alertController = UIAlertController(title: "Error creating account", message: "Please enter your name.", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+            
+            alertController.addAction(okAction)
+            
+            self.present(alertController, animated: true, completion: nil)
+            
+            return
+        }
+        
+        self.loginOverlay.label.text = "Registering..."
+        self.loginOverlay.show()
+        
+        Auth.auth().createUser(withEmail: email, password: password, completion: {(user, error) -> Void in
+            self.loginOverlay.hide()
+            if let error = error {
+                DebugLogger.log("\(error.localizedDescription)")
+                
+                self.loginOverlay.hide()
+                
+                let alertController = UIAlertController(title: "Error creating account", message: error.localizedDescription, preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+                
+                alertController.addAction(okAction)
+                
+                self.present(alertController, animated: true, completion: nil)
+                
+                return
+            }
+            
+            let displayName = name
+            let email = user?.email ?? "No data"
+            let uid = user?.uid ?? "No uid"
+            
+            FirebaseUtils.saveUserName(displayName)
+            FirebaseUtils.saveUserEmail(email)
+            FirebaseUtils.saveUserAccountProvider(AccountProvider.WalletManager)
+            
+            DebugLogger.log("Auth - Successful login!\nName: \(displayName)\nE-mail: \(email)\nuID: \(uid)")
+            
+            self.dismiss(animated: true, completion: nil)
+            self.loginSuccess(WalletManagerUser(displayName, email, AccountProvider.WalletManager))
+            self.setRegistering(false)
+        })
+    }
+
+    
     //MARK: - Text Field Delegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if let loginTextField = textField as? LoginTextField {
-            if let nextField = loginTextField.nextField {
-                nextField.becomeFirstResponder()
-            } else {
-                loginTextField.resignFirstResponder()
-                self.login()
-            }
+        guard let loginTextField = textField as? LoginTextField else {
+            return true
+        }
+        
+        if let nextField = loginTextField.nextField {
+            nextField.becomeFirstResponder()
+        } else {
+            loginTextField.resignFirstResponder()
+            self.loginButton.sendActions(for: .touchUpInside)
         }
 
         return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if let loginTextField = textField as? LoginTextField {
+            if loginTextField.identifier == "E-mail" {
+                self.IsEmailRegistered(loginTextField.text, { (registered) -> Void in
+                    self.setRegistering(!registered)
+                })
+            }
+        }
     }
 
     //MARK: - GIDSignInUI Delegate
     func sign(_ signIn: GIDSignIn!, dismiss viewController: UIViewController!) {
         viewController.dismiss(animated: true, completion: nil)
+        self.loginOverlay.label.text = "Logging in..."
         self.loginOverlay.show()
     }
     
-    //MARK: - RegisterViewController Delegate
-    func didCreateAccount(_ user: WalletManagerUser) {
-        self.loginOverlay.show()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: { () -> Void in
-            self.loginSuccess(user)
-        })
+    //MARK: - Utils
+    func closeKeyboard() {
+        self.view.endEditing(true)
     }
     
     //MARK: - Login
@@ -178,8 +320,9 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
         self.present(tabBarController, animated: true, completion: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
             self.loginOverlay.hide()
-            self.textFieldEmail.text = ""
-            self.textFieldPassword.text = ""
+            self.emailTextFieldView.setText("")
+            self.passwordTextFieldView.setText("")
+            self.nameTextFieldView.setText("")
         }
     }
     
@@ -187,21 +330,66 @@ class LoginViewController : UIViewController, UITextFieldDelegate, GIDSignInUIDe
         self.loginOverlay.hide()
     }
     
-    //FIXME: Fix async process
-    func isEmailRegistered(_ email: String!, _ completion: @escaping (Bool) -> Void) -> Void {
+    //MARK: - E-mail
+    func IsEmailRegistered(_ email: String!, _ completion: @escaping (Bool) -> Void) -> Void {
         //Get number of providers (if providers == 0 account doesn't exist?)
         DebugLogger.log("Fetching...")
         Auth.auth().fetchProviders(forEmail: email, completion: { (array, error) -> Void in
             if let error = error {
                 DebugLogger.log("Fetching providers error: \(error.localizedDescription)")
-                completion(false)
                 return
             }
             if let array = array {
+                DebugLogger.log("Fetched \(array.count) provider(s)")
                 completion(array.count > 0)
             } else {
+                DebugLogger.log("No providers fetched")
                 completion(false)
             }
+        })
+    }
+    
+    //MARK: - UI Animations
+    func setRegistering(_ registering: Bool) {
+        let duration = 0.6
+        self.isRegistering = registering
+
+        if self.isRegistering {
+            self.emailViewCenterYConstraint.constant = -128.0
+            self.loginButton.setTitle("Register", for: .normal)
+            
+            self.registerButton.setTitle("Cancel", for: .normal)
+            
+            self.passwordTextFieldView.setNextTextField(self.nameTextFieldView)
+            self.passwordTextFieldView.setReturnKey(.next)
+            
+            self.nameTextFieldView.setText("")
+        } else {
+            self.emailViewCenterYConstraint.constant = self.emailViewCenterYOriginalConstant
+            self.loginButton.setTitle(self.loginButtonLabelTextOriginal, for: .normal)
+            
+            self.registerButton.setTitle(self.registerButtonLabelTextOriginal, for: .normal)
+            
+            self.passwordTextFieldView.setNextTextField(nil)
+            self.passwordTextFieldView.setReturnKey(.go)
+        }
+        self.passwordTextFieldView.loginTextField.reloadInputViews()
+        UIView.animate(withDuration: duration, animations: { () -> Void in
+            if self.isRegistering {
+                self.googleSignInView.alpha = 0.0
+            } else {
+                self.registerFieldsView.alpha = 0.0
+            }
+            self.view.layoutIfNeeded()
+        })
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: {
+            UIView.animate(withDuration: duration, animations: { () -> Void in
+                if self.isRegistering {
+                    self.registerFieldsView.alpha = 1.0
+                } else {
+                    self.googleSignInView.alpha = 1.0
+                }
+            })
         })
     }
 }

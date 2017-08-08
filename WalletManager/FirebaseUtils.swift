@@ -6,26 +6,162 @@
 //  Copyright © 2017 Eric Labaci. All rights reserved.
 //
 
+//MARK: - Constants
+private struct Activity {
+    static let Undefined: String! = "Undefined"
+    static let UserName: String! = "UserName"
+    static let UserEmail: String! = "UserEmail"
+    static let UserAccountProvider: String! = "UserAccountProvider"
+}
+
+private struct ActivityType {
+    static let Undefined: Int! = 0
+    static let Saving: Int! = 1
+    static let SaveSuccess: Int! = 2
+    static let SaveFail: Int! = 3
+    static let Loading: Int! = 4
+    static let LoadSuccess: Int! = 5
+    static let LoadFail: Int! = 6
+}
+
+struct FirebaseNodes {
+    static let Users: String! = "users"
+    static let UserName: String! = "name"
+    static let UserEmail: String! = "email"
+    static let UserAccountProvider: String! = "accountProvider"
+}
+
 class FirebaseUtils {
+    //MARK: - References Singleton
     private static var databaseReference = {
         return Database.database().reference()
     }()
     
-    class func saveUserName(_ name: String) {
-        if let uid = Auth.auth().currentUser?.uid {
-            self.databaseReference.child("users").child(uid).child("name").setValue(name)
+    private static var storageReference = {
+        return Storage.storage().reference()
+    }()
+    
+    //MARK: - Generic fuctions
+    private class func save(_ databaseReference: DatabaseReference, _ data: Any, _ activity: String? = Activity.Undefined, withErrorBlock errorBlock: ((Error) -> Void)? = nil) {
+        self.logActivity(activity, ActivityType.Saving)
+        databaseReference.setValue(data, withCompletionBlock: { (error, ref) -> Void in
+            if let error = error {
+                self.logActivity(activity, ActivityType.SaveFail, error.localizedDescription)
+                if let errorBlock = errorBlock {
+                    errorBlock(error)
+                }
+                return
+            }
+            self.logActivity(activity, ActivityType.SaveSuccess)
+        })
+    }
+    
+    //MARK: - User
+    //MARK: UID
+    class func getUID() -> String? {
+        return Auth.auth().currentUser?.uid
+    }
+    
+    //MARK: Name
+    class func saveUserName(_ name: String, withErrorBlock errorBlock: ((Error) -> Void)? = nil) {
+        if let uid = self.getUID() {
+            self.save(self.databaseReference.child(FirebaseNodes.Users).child(uid).child(FirebaseNodes.UserName), name, Activity.UserName, withErrorBlock: errorBlock)
         }
     }
     
-    class func saveUserEmail(_ email: String) {
-        if let uid = Auth.auth().currentUser?.uid {
-            self.databaseReference.child("users").child(uid).child("email").setValue(email)
+    class func loadUserName(_ completion: @escaping (String?) -> Void) {
+        if let uid = self.getUID() {
+            self.logActivity(Activity.UserName, ActivityType.Loading)
+            self.databaseReference.child(FirebaseNodes.Users).child(uid).child(FirebaseNodes.UserName).observeSingleEvent(of: .value, with: { (snapshot) -> Void in
+                if let userName = snapshot.value as? String {
+                    self.logActivity(Activity.UserName, ActivityType.LoadSuccess)
+                    completion(userName)
+                } else {
+                    self.logActivity(Activity.UserName, ActivityType.LoadFail)
+                    completion(nil)
+                }
+            })
         }
     }
     
-    class func saveUserAccountProvider(_ accountProvider: String) {
-        if let uid = Auth.auth().currentUser?.uid {
-            self.databaseReference.child("users").child(uid).child("accountProvider").setValue(accountProvider)
+    class func observeUserName(with completion: @escaping (DataSnapshot) -> Void) {
+        if let uid = self.getUID() {
+            self.databaseReference.child(FirebaseNodes.Users).child(uid).child(FirebaseNodes.UserName).observe(.value, with: completion)
+        }
+    }
+    
+    //MARK: Email
+    class func saveUserEmail(_ email: String, withErrorBlock errorBlock: ((Error) -> Void)? = nil) {
+        if let uid = self.getUID() {
+            self.save(self.databaseReference.child(FirebaseNodes.Users).child(uid).child(FirebaseNodes.UserEmail), email, Activity.UserEmail, withErrorBlock: errorBlock)
+        }
+    }
+    
+    //MARK: Account Provider
+    class func saveUserAccountProvider(_ accountProvider: String, withErrorBlock errorBlock: ((Error) -> Void)? = nil) {
+        if let uid = self.getUID() {
+            self.save(self.databaseReference.child(FirebaseNodes.Users).child(uid).child(FirebaseNodes.UserAccountProvider), accountProvider, Activity.UserAccountProvider, withErrorBlock: errorBlock)
+        }
+    }
+    
+    //MARK: Profile Image
+    class func loadUserProfileImage(_ completion: @escaping (Data?, Error?) -> Void) {
+        if let uid = self.getUID() {
+            self.storageReference.child(FirebaseNodes.Users).child(uid).child("profileImage").getData(maxSize: 5000000, completion: {(data, error) -> Void in
+                if let error = error {
+                    DebugLogger.log("Firebase - Profile image download error: \(error.localizedDescription)")
+                }
+                completion(data, error)                
+            })
+        }
+    }
+    
+    //MARK: - Debug Log
+    private class func logActivity(_ activity: String?, _ type: Int?, _ description: String? = nil) {
+        var activity: String! = activity
+        var type: Int! = type
+        
+        if activity == nil {
+            activity = Activity.Undefined
+        }
+        if type == nil {
+            type = ActivityType.Undefined
+        }
+        
+        var activityType = ""
+        switch type {
+        case ActivityType.Saving:
+            activityType = "Saving"
+            break
+        
+        case ActivityType.SaveSuccess:
+            activityType = "Save success"
+            break
+        
+        case ActivityType.SaveFail:
+            activityType = "Save fail"
+            break
+            
+        case ActivityType.Loading:
+            activityType = "Loading"
+            break
+            
+        case ActivityType.LoadSuccess:
+            activityType = "Load success"
+            break
+            
+        case ActivityType.LoadFail:
+            activityType = "Load fail"
+            break
+            
+        default:
+            activityType = "Undefined"
+            break
+        }
+        if let description = description {
+            DebugLogger.log("FirebaseUtils [\(activity!)] - \(activityType) - \(description)")
+        } else {
+            DebugLogger.log("FirebaseUtils [\(activity!)] - \(activityType)")
         }
     }
 }

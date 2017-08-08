@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LoginTextFieldView" customModule="WalletManager" customModuleProvider="target">
+            <connections>
+                <outlet property="contentView" destination="iN0-l3-epB" id="0EM-aB-UVm"/>
+                <outlet property="loginTextField" destination="RqU-a8-AyO" id="4PV-lV-c1f"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C3J-tB-q99">
+                    <rect key="frame" x="-0.5" y="39" width="375" height="1"/>
+                    <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="atf-5P-o2a"/>
+                    </constraints>
+                </view>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="LoginTextField" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RqU-a8-AyO" customClass="LoginTextField" customModule="WalletManager" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="39"/>
+                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="C3J-tB-q99" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="25V-hT-FCj"/>
+                <constraint firstItem="RqU-a8-AyO" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="3o6-5t-bpY"/>
+                <constraint firstAttribute="bottom" secondItem="C3J-tB-q99" secondAttribute="bottom" id="H4R-uM-4J2"/>
+                <constraint firstItem="C3J-tB-q99" firstAttribute="top" secondItem="RqU-a8-AyO" secondAttribute="bottom" id="Uoo-n4-oyT"/>
+                <constraint firstItem="RqU-a8-AyO" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="YVt-yf-OM8"/>
+                <constraint firstAttribute="trailing" secondItem="RqU-a8-AyO" secondAttribute="trailing" id="foc-9j-QBi"/>
+                <constraint firstItem="C3J-tB-q99" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="rS4-L6-yiO"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="41.5" y="75"/>
+        </view>
+    </objects>
+</document>

@@ -11,7 +11,7 @@
 		F419956D1F192B920055E2AA /* ActivityIndicatorOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419956C1F192B920055E2AA /* ActivityIndicatorOverlay.swift */; };
 		F41995711F1938330055E2AA /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41995701F1938330055E2AA /* SettingsViewController.swift */; };
 		F41995741F193AEC0055E2AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F41995731F193AEC0055E2AA /* Assets.xcassets */; };
-		F421EF781F1FE18F00932642 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F421EF771F1FE18F00932642 /* RegisterViewController.swift */; };
+		F4212C3F1F3397090040A809 /* LoginTextFieldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4212C3E1F3397090040A809 /* LoginTextFieldView.xib */; };
 		F422AAE31F311FCF0063B38F /* FirebaseUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F422AAE21F311FCF0063B38F /* FirebaseUtils.swift */; };
 		F422C4CC1F212BD10085AF63 /* DebugLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F422C4CB1F212BD10085AF63 /* DebugLog.swift */; };
 		F422C4CF1F2133090085AF63 /* WalletManagerUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F422C4CE1F2133090085AF63 /* WalletManagerUser.swift */; };
@@ -21,7 +21,7 @@
 		F4AC7B7E1F17D22A009E0251 /* Authentication.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4AC7B7C1F17D22A009E0251 /* Authentication.storyboard */; };
 		F4AC7B831F17D22A009E0251 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4AC7B811F17D22A009E0251 /* LaunchScreen.storyboard */; };
 		F4AC7B8C1F17D3C7009E0251 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AC7B8B1F17D3C7009E0251 /* LoginViewController.swift */; };
-		F4AC7B8F1F17DA02009E0251 /* LoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AC7B8E1F17DA02009E0251 /* LoginTextField.swift */; };
+		F4AC7B8F1F17DA02009E0251 /* LoginTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AC7B8E1F17DA02009E0251 /* LoginTextFieldView.swift */; };
 		F4E066C41F190A280057C1E5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E066C31F190A280057C1E5 /* Extensions.swift */; };
 		F4E066C91F190D310057C1E5 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E066C81F190D310057C1E5 /* HomeViewController.swift */; };
 		F4E066CB1F190D690057C1E5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4E066CA1F190D690057C1E5 /* Main.storyboard */; };
@@ -34,7 +34,7 @@
 		F419956C1F192B920055E2AA /* ActivityIndicatorOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorOverlay.swift; sourceTree = "<group>"; };
 		F41995701F1938330055E2AA /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		F41995731F193AEC0055E2AA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F421EF771F1FE18F00932642 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		F4212C3E1F3397090040A809 /* LoginTextFieldView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginTextFieldView.xib; sourceTree = "<group>"; };
 		F422AAE21F311FCF0063B38F /* FirebaseUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseUtils.swift; sourceTree = "<group>"; };
 		F422C4CB1F212BD10085AF63 /* DebugLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugLog.swift; sourceTree = "<group>"; };
 		F422C4CE1F2133090085AF63 /* WalletManagerUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletManagerUser.swift; sourceTree = "<group>"; };
@@ -46,7 +46,7 @@
 		F4AC7B821F17D22A009E0251 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F4AC7B841F17D22A009E0251 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F4AC7B8B1F17D3C7009E0251 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		F4AC7B8E1F17DA02009E0251 /* LoginTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTextField.swift; sourceTree = "<group>"; };
+		F4AC7B8E1F17DA02009E0251 /* LoginTextFieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTextFieldView.swift; sourceTree = "<group>"; };
 		F4AC7B921F17E0F1009E0251 /* WalletManager-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WalletManager-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4E066C31F190A280057C1E5 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		F4E066C81F190D310057C1E5 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -90,6 +90,15 @@
 			name = LaunchScreen;
 			sourceTree = "<group>";
 		};
+		F4212C3D1F3396B70040A809 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				F4212C3E1F3397090040A809 /* LoginTextFieldView.xib */,
+				F4AC7B8E1F17DA02009E0251 /* LoginTextFieldView.swift */,
+			);
+			name = Login;
+			sourceTree = "<group>";
+		};
 		F422C4CD1F2132F90085AF63 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -101,8 +110,8 @@
 		F46303211F2234B300ADBF5A /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				F4212C3D1F3396B70040A809 /* Login */,
 				F419956C1F192B920055E2AA /* ActivityIndicatorOverlay.swift */,
-				F4AC7B8E1F17DA02009E0251 /* LoginTextField.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -167,7 +176,6 @@
 			children = (
 				F4AC7B7C1F17D22A009E0251 /* Authentication.storyboard */,
 				F4AC7B8B1F17D3C7009E0251 /* LoginViewController.swift */,
-				F421EF771F1FE18F00932642 /* RegisterViewController.swift */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -251,6 +259,7 @@
 				F46303201F2228CF00ADBF5A /* GoogleService-Info.plist in Resources */,
 				F4AC7B7E1F17D22A009E0251 /* Authentication.storyboard in Resources */,
 				F41995741F193AEC0055E2AA /* Assets.xcassets in Resources */,
+				F4212C3F1F3397090040A809 /* LoginTextFieldView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,10 +321,9 @@
 				F422AAE31F311FCF0063B38F /* FirebaseUtils.swift in Sources */,
 				F4E066C91F190D310057C1E5 /* HomeViewController.swift in Sources */,
 				F422C4D11F2139BA0085AF63 /* Constants.swift in Sources */,
-				F4AC7B8F1F17DA02009E0251 /* LoginTextField.swift in Sources */,
+				F4AC7B8F1F17DA02009E0251 /* LoginTextFieldView.swift in Sources */,
 				F422C4CC1F212BD10085AF63 /* DebugLog.swift in Sources */,
 				F41995711F1938330055E2AA /* SettingsViewController.swift in Sources */,
-				F421EF781F1FE18F00932642 /* RegisterViewController.swift in Sources */,
 				F4AC7B8C1F17D3C7009E0251 /* LoginViewController.swift in Sources */,
 				F4E066C41F190A280057C1E5 /* Extensions.swift in Sources */,
 				F4AC7B791F17D22A009E0251 /* AppDelegate.swift in Sources */,

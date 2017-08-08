@@ -12,3 +12,15 @@ extension Notification.Name {
     static let GoogleLogoutSuccess = Notification.Name("GoogleLogoutSuccess")
     static let GoogleLogoutFail = Notification.Name("GoogleLogoutFail")
 }
+
+extension UIImageView {
+    func addBlurEffect() {
+        let blurEffect = UIBlurEffect(style: .extraLight)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.alpha = 0.85
+        blurEffectView.frame = self.bounds
+        
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.addSubview(blurEffectView)
+    }
+}
