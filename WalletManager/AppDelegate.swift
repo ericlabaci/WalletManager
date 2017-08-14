@@ -9,6 +9,8 @@
 import UIKit
 import GoogleSignIn
 import FirebaseStorage
+import Fabric
+import Crashlytics
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
@@ -19,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     //MARK: - Class methods
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        //Initialize Firebase
         FirebaseApp.configure()
 //        https://github.com/firebase/firechat/blob/master/rules.json
         
@@ -27,6 +30,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
+        
+        //Initialize Crashlytics
+        Fabric.sharedSDK().debug = true
+        Fabric.with([Crashlytics.self])
         
         return true
     }

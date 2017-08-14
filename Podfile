@@ -15,6 +15,8 @@ target 'WalletManager' do
   #pod 'FBSDKCoreKit'
   #pod 'FBSDKShareKit'
   #pod 'FBSDKLoginKit'
+  pod 'Fabric'
+  pod 'Crashlytics'
   
   #pod 'FacebookCore'
   #pod 'FacebookLogin'

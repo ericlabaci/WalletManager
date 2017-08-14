@@ -203,6 +203,7 @@
 				F4AC7B731F17D22A009E0251 /* Resources */,
 				EC7664B3AF3D8BDC45F650E5 /* [CP] Embed Pods Frameworks */,
 				68034C9A3D96FF2D117B8EA7 /* [CP] Copy Pods Resources */,
+				F490BF3A1F3B7DE80069829A /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -311,6 +312,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WalletManager/Pods-WalletManager-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		F490BF3A1F3B7DE80069829A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" a3bd8c9906ed123059bb1d7d1d54fbc2c63f54c2 f07d5e655627ed503ff3912c21c37ba2b3f4ecab82d298549d9d650394192a4e";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -378,7 +392,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -455,6 +469,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 2DB2T6HKRU;
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = WalletManager/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Eric-Labaci.WalletManager";
@@ -472,6 +487,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 2DB2T6HKRU;
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = WalletManager/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Eric-Labaci.WalletManager";
