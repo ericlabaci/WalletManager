@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="3fW-Nr-IB8">
+    <device id="retina4_0" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Settings-->
+        <scene sceneID="0Vr-rj-JgC">
+            <objects>
+                <navigationController id="3fW-Nr-IB8" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Settings" image="SettingsIcon" id="ik8-GX-9o5"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="HT7-kT-j8O">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="o7Q-Rg-AZD" kind="relationship" relationship="rootViewController" id="fQK-53-4nh"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ebk-pu-I6e" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1606" y="841"/>
+        </scene>
+        <!--Settings-->
+        <scene sceneID="Klq-IC-CgL">
+            <objects>
+                <viewController id="o7Q-Rg-AZD" customClass="SettingsViewController" customModule="WalletManager" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="b4s-gn-Q5H"/>
+                        <viewControllerLayoutGuide type="bottom" id="5TR-zO-OAv"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="DH6-EU-5Lx">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="keL-mU-1Jn">
+                                <rect key="frame" x="16" y="481" width="288" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Zqh-IH-IPL"/>
+                                </constraints>
+                                <state key="normal" title="Sign Out"/>
+                                <connections>
+                                    <action selector="logout:" destination="o7Q-Rg-AZD" eventType="touchUpInside" id="nn8-3g-2yJ"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="keL-mU-1Jn" firstAttribute="leading" secondItem="DH6-EU-5Lx" secondAttribute="leadingMargin" id="Hkr-kY-Mpb"/>
+                            <constraint firstItem="5TR-zO-OAv" firstAttribute="top" secondItem="keL-mU-1Jn" secondAttribute="bottom" constant="8" id="nLj-va-viS"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="keL-mU-1Jn" secondAttribute="trailing" id="wZ5-U7-bg7"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Settings" id="5zO-jg-QJ8"/>
+                    <connections>
+                        <outlet property="buttonLogout" destination="keL-mU-1Jn" id="BsQ-14-aYq"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ttp-nU-U0D" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2456.25" y="840.84507042253517"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="SettingsIcon" width="36" height="36"/>
+    </resources>
+</document>

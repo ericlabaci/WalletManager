@@ -54,8 +54,8 @@ class SettingsViewController : UIViewController {
     
     //MARK: - IBActions
     @IBAction func logout(_ sender: Any) {
-        let alert = UIAlertController.init(title: "Are you sure you want to logout?", message: nil, preferredStyle: UIAlertControllerStyle.alert)
-        let okAction = UIAlertAction.init(title: "Logout", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
+        let alert = UIAlertController.init(title: "Are you sure you want to sign out?", message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        let okAction = UIAlertAction.init(title: "Yes", style: UIAlertActionStyle.default, handler: { (UIAlertAction) -> Void in
             self.loginOverlay.show()
             
             do {
@@ -86,7 +86,7 @@ class SettingsViewController : UIViewController {
                 DebugLogger.log("Auth - Error signing out \(error.localizedDescription)")
             }
         })
-        let cancelAction = UIAlertAction.init(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil)
+        let cancelAction = UIAlertAction.init(title: "No", style: UIAlertActionStyle.cancel, handler: nil)
         
         alert.addAction(okAction)
         alert.addAction(cancelAction)

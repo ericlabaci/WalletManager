@@ -25,19 +25,32 @@ private struct ActivityType {
 }
 
 struct FirebaseNodes {
-    static let Users: String! = "users"
-    static let UserName: String! = "name"
-    static let UserEmail: String! = "email"
-    static let UserAccountProvider: String! = "accountProvider"
+    struct Users {
+        static let Root: String! = "users"
+        static let Name: String! = "name"
+        static let Email: String! = "email"
+        static let AccountProvider: String! = "accountProvider"
+        static let Wallets: String! = "wallets"
+    }
+    
+    struct Wallets {
+        static let Root: String! = "wallets"
+        static let Name: String! = "name"
+        static let Description: String! = "description"
+        struct Members {
+            static let Root: String! = "members"
+            static let Group: String! = "group"
+        }
+    }
 }
 
 class FirebaseUtils {
     //MARK: - References Singleton
-    private static var databaseReference = {
+    static var databaseReference = {
         return Database.database().reference()
     }()
     
-    private static var storageReference = {
+    static var storageReference = {
         return Storage.storage().reference()
     }()
     
@@ -65,14 +78,14 @@ class FirebaseUtils {
     //MARK: Name
     class func saveUserName(_ name: String, withErrorBlock errorBlock: ((Error) -> Void)? = nil) {
         if let uid = self.getUID() {
-            self.save(self.databaseReference.child(FirebaseNodes.Users).child(uid).child(FirebaseNodes.UserName), name, Activity.UserName, withErrorBlock: errorBlock)
+            self.save(self.databaseReference.child(FirebaseNodes.Users.Root).child(uid).child(FirebaseNodes.Users.Name), name, Activity.UserName, withErrorBlock: errorBlock)
         }
     }
     
     class func loadUserName(_ completion: @escaping (String?) -> Void) {
         if let uid = self.getUID() {
             self.logActivity(Activity.UserName, ActivityType.Loading)
-            self.databaseReference.child(FirebaseNodes.Users).child(uid).child(FirebaseNodes.UserName).observeSingleEvent(of: .value, with: { (snapshot) -> Void in
+            self.databaseReference.child(FirebaseNodes.Users.Root).child(uid).child(FirebaseNodes.Users.Name).observeSingleEvent(of: .value, with: { (snapshot) -> Void in
                 if let userName = snapshot.value as? String {
                     self.logActivity(Activity.UserName, ActivityType.LoadSuccess)
                     completion(userName)
@@ -86,28 +99,28 @@ class FirebaseUtils {
     
     class func observeUserName(with completion: @escaping (DataSnapshot) -> Void) {
         if let uid = self.getUID() {
-            self.databaseReference.child(FirebaseNodes.Users).child(uid).child(FirebaseNodes.UserName).observe(.value, with: completion)
+            self.databaseReference.child(FirebaseNodes.Users.Root).child(uid).child(FirebaseNodes.Users.Name).observe(.value, with: completion)
         }
     }
     
     //MARK: Email
     class func saveUserEmail(_ email: String, withErrorBlock errorBlock: ((Error) -> Void)? = nil) {
         if let uid = self.getUID() {
-            self.save(self.databaseReference.child(FirebaseNodes.Users).child(uid).child(FirebaseNodes.UserEmail), email, Activity.UserEmail, withErrorBlock: errorBlock)
+            self.save(self.databaseReference.child(FirebaseNodes.Users.Root).child(uid).child(FirebaseNodes.Users.Email), email, Activity.UserEmail, withErrorBlock: errorBlock)
         }
     }
     
     //MARK: Account Provider
     class func saveUserAccountProvider(_ accountProvider: String, withErrorBlock errorBlock: ((Error) -> Void)? = nil) {
         if let uid = self.getUID() {
-            self.save(self.databaseReference.child(FirebaseNodes.Users).child(uid).child(FirebaseNodes.UserAccountProvider), accountProvider, Activity.UserAccountProvider, withErrorBlock: errorBlock)
+            self.save(self.databaseReference.child(FirebaseNodes.Users.Root).child(uid).child(FirebaseNodes.Users.AccountProvider), accountProvider, Activity.UserAccountProvider, withErrorBlock: errorBlock)
         }
     }
     
     //MARK: Profile Image
     class func loadUserProfileImage(_ completion: @escaping (Data?, Error?) -> Void) {
         if let uid = self.getUID() {
-            self.storageReference.child(FirebaseNodes.Users).child(uid).child("profileImage").getData(maxSize: 5000000, completion: {(data, error) -> Void in
+            self.storageReference.child(FirebaseNodes.Users.Root).child(uid).child("profileImage").getData(maxSize: 5000000, completion: {(data, error) -> Void in
                 if let error = error {
                     DebugLogger.log("Firebase - Profile image download error: \(error.localizedDescription)")
                 }

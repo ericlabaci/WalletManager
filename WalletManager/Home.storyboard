@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="e1L-Lh-K9c">
+    <device id="retina4_0" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Home-->
+        <scene sceneID="maH-gy-ilQ">
+            <objects>
+                <navigationController id="e1L-Lh-K9c" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Home" image="HomeIcon" id="80W-ka-wcM"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="52l-ob-6z5">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="aRx-VD-iwE" kind="relationship" relationship="rootViewController" id="1JE-hw-Vxt"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RUA-Sj-pom" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1606" y="-581"/>
+        </scene>
+        <!--Home-->
+        <scene sceneID="q8Q-W7-jJw">
+            <objects>
+                <viewController storyboardIdentifier="UIViewController-R2m-jk-mZF" id="aRx-VD-iwE" customClass="HomeViewController" customModule="WalletManager" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ab6-kT-F0l"/>
+                        <viewControllerLayoutGuide type="bottom" id="31n-gS-Pgm"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="qYq-g2-zQu">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LKp-Qc-Hq9">
+                                <rect key="frame" x="128" y="80" width="64" height="64"/>
+                                <color key="backgroundColor" red="0.5" green="0.5" blue="0.5" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="DRq-Zj-xpA"/>
+                                    <constraint firstAttribute="width" constant="64" id="l6j-Hj-3Mt"/>
+                                </constraints>
+                            </imageView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="x4H-ZD-X4B">
+                                <rect key="frame" x="150" y="102" width="20" height="20"/>
+                            </activityIndicatorView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Display Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8z3-VD-NWf">
+                                <rect key="frame" x="103" y="152" width="114" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25" id="Y9K-ig-yO6"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rFv-zS-s4g">
+                                <rect key="frame" x="97" y="201" width="126" height="30"/>
+                                <state key="normal" title="Create Test Wallet"/>
+                                <connections>
+                                    <action selector="createTestWallet:" destination="aRx-VD-iwE" eventType="touchUpInside" id="mP9-qb-4Fn"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cqu-F6-Ik7">
+                                <rect key="frame" x="88.5" y="239" width="143" height="30"/>
+                                <state key="normal" title="Change Other Group"/>
+                                <connections>
+                                    <action selector="changeOtherUserGroup:" destination="aRx-VD-iwE" eventType="touchUpInside" id="ts1-r8-Lfz"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Wallet Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Agb-QD-nhn">
+                                <rect key="frame" x="16" y="285" width="288" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U5x-d3-r5E">
+                                <rect key="frame" x="88" y="323" width="144" height="30"/>
+                                <state key="normal" title="Change Wallet Name"/>
+                                <connections>
+                                    <action selector="changeWalletName:" destination="aRx-VD-iwE" eventType="touchUpInside" id="R5U-bi-Mh0"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Wallet Description" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CP0-Z4-dT2">
+                                <rect key="frame" x="16" y="369" width="288" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9AR-u6-Vab">
+                                <rect key="frame" x="69" y="407" width="182" height="30"/>
+                                <state key="normal" title="Change Wallet Description"/>
+                                <connections>
+                                    <action selector="changeWalletDescription:" destination="aRx-VD-iwE" eventType="touchUpInside" id="Hz0-cH-lLQ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7kr-5a-aKO">
+                                <rect key="frame" x="76" y="453" width="168" height="30"/>
+                                <state key="normal" title="Change Own Permission"/>
+                                <connections>
+                                    <action selector="changeMyPermission:" destination="aRx-VD-iwE" eventType="touchUpInside" id="90B-7l-4DW"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Wallet ID" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ycq-Xf-5JQ">
+                                <rect key="frame" x="16" y="487" width="288" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="CP0-Z4-dT2" firstAttribute="leading" secondItem="qYq-g2-zQu" secondAttribute="leadingMargin" id="8Ys-W0-Z1c"/>
+                            <constraint firstItem="cqu-F6-Ik7" firstAttribute="top" secondItem="rFv-zS-s4g" secondAttribute="bottom" constant="8" id="BYR-HG-ans"/>
+                            <constraint firstItem="U5x-d3-r5E" firstAttribute="centerX" secondItem="qYq-g2-zQu" secondAttribute="centerX" id="DgN-ge-Q58"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ycq-Xf-5JQ" secondAttribute="trailing" id="Ejf-mJ-Ali"/>
+                            <constraint firstItem="LKp-Qc-Hq9" firstAttribute="centerX" secondItem="qYq-g2-zQu" secondAttribute="centerX" id="Ekl-bE-ctW"/>
+                            <constraint firstItem="ycq-Xf-5JQ" firstAttribute="top" secondItem="7kr-5a-aKO" secondAttribute="bottom" constant="4" id="H7R-qh-ErL"/>
+                            <constraint firstItem="7kr-5a-aKO" firstAttribute="centerX" secondItem="qYq-g2-zQu" secondAttribute="centerX" id="HUW-oq-q3M"/>
+                            <constraint firstItem="LKp-Qc-Hq9" firstAttribute="top" secondItem="ab6-kT-F0l" secondAttribute="bottom" constant="16" id="KuB-HE-P96"/>
+                            <constraint firstItem="rFv-zS-s4g" firstAttribute="top" secondItem="8z3-VD-NWf" secondAttribute="bottom" constant="24" id="LMU-6Z-CUp"/>
+                            <constraint firstItem="8z3-VD-NWf" firstAttribute="centerX" secondItem="LKp-Qc-Hq9" secondAttribute="centerX" id="N5y-l8-EBp"/>
+                            <constraint firstItem="x4H-ZD-X4B" firstAttribute="centerY" secondItem="LKp-Qc-Hq9" secondAttribute="centerY" id="NV5-EC-C94"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Agb-QD-nhn" secondAttribute="trailing" id="SZi-hg-dq3"/>
+                            <constraint firstItem="Agb-QD-nhn" firstAttribute="leading" secondItem="qYq-g2-zQu" secondAttribute="leadingMargin" id="W5n-FY-pZL"/>
+                            <constraint firstItem="rFv-zS-s4g" firstAttribute="centerX" secondItem="qYq-g2-zQu" secondAttribute="centerX" id="Ymu-Py-bbA"/>
+                            <constraint firstItem="9AR-u6-Vab" firstAttribute="top" secondItem="CP0-Z4-dT2" secondAttribute="bottom" constant="8" id="b0C-YW-s49"/>
+                            <constraint firstItem="CP0-Z4-dT2" firstAttribute="top" secondItem="U5x-d3-r5E" secondAttribute="bottom" constant="16" id="g3O-LM-HzF"/>
+                            <constraint firstItem="8z3-VD-NWf" firstAttribute="top" secondItem="LKp-Qc-Hq9" secondAttribute="bottom" constant="8" id="gse-a9-UqW"/>
+                            <constraint firstItem="9AR-u6-Vab" firstAttribute="centerX" secondItem="qYq-g2-zQu" secondAttribute="centerX" id="iIo-td-8iS"/>
+                            <constraint firstItem="cqu-F6-Ik7" firstAttribute="centerX" secondItem="qYq-g2-zQu" secondAttribute="centerX" id="jLU-py-Gwp"/>
+                            <constraint firstItem="Agb-QD-nhn" firstAttribute="top" secondItem="cqu-F6-Ik7" secondAttribute="bottom" constant="16" id="kOB-Vu-YFL"/>
+                            <constraint firstItem="x4H-ZD-X4B" firstAttribute="centerX" secondItem="LKp-Qc-Hq9" secondAttribute="centerX" id="lVa-N3-k2Z"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="CP0-Z4-dT2" secondAttribute="trailing" id="pzr-X4-FhU"/>
+                            <constraint firstItem="U5x-d3-r5E" firstAttribute="top" secondItem="Agb-QD-nhn" secondAttribute="bottom" constant="8" id="tXD-oE-mwN"/>
+                            <constraint firstItem="ycq-Xf-5JQ" firstAttribute="leading" secondItem="qYq-g2-zQu" secondAttribute="leadingMargin" id="wOP-Fh-SIh"/>
+                            <constraint firstItem="7kr-5a-aKO" firstAttribute="top" secondItem="9AR-u6-Vab" secondAttribute="bottom" constant="16" id="zpS-y3-z6h"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Home" id="38q-rS-COX"/>
+                    <connections>
+                        <outlet property="activityProfileImage" destination="x4H-ZD-X4B" id="aEJ-zv-vW8"/>
+                        <outlet property="imageViewProfile" destination="LKp-Qc-Hq9" id="pQ7-gm-pUp"/>
+                        <outlet property="labelDisplayName" destination="8z3-VD-NWf" id="xQJ-qV-V6J"/>
+                        <outlet property="walletDescriptionTextField" destination="CP0-Z4-dT2" id="KW9-aW-z1N"/>
+                        <outlet property="walletIDTextField" destination="ycq-Xf-5JQ" id="WgZ-XV-xQl"/>
+                        <outlet property="walletNameTextField" destination="Agb-QD-nhn" id="UcU-B8-Gvh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qK0-5J-bAg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2456.25" y="-582.04225352112678"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="HomeIcon" width="36" height="36"/>
+    </resources>
+</document>

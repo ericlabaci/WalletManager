@@ -70,7 +70,7 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
         
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(closeKeyboard)))
         
-        self.emailTextFieldView.setProperties([.PlaceholderText : "E-mail",
+        self.emailTextFieldView.setProperties([.PlaceholderText : "E-mail*",
                                                .Icon : UIImage(named: "EmailLoginIcon") as Any,
                                                .KeyboardType : UIKeyboardType.emailAddress as Any,
                                                .ReturnKey: UIReturnKeyType.next as Any,
@@ -79,7 +79,7 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
                                                .TextFieldDelegate : self,
                                                .TextFieldIdentifier : "E-mail"])
         
-        self.passwordTextFieldView.setProperties([.PlaceholderText : "Password",
+        self.passwordTextFieldView.setProperties([.PlaceholderText : "Password*",
                                                   .Icon : UIImage(named: "PasswordLoginIcon") as Any,
                                                   .KeyboardType : UIKeyboardType.default as Any,
                                                   .ReturnKey: UIReturnKeyType.go as Any,
@@ -88,7 +88,7 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
                                                   .TextFieldDelegate : self,
                                                   .TextFieldIdentifier : "Password"])
         
-        self.passwordRepeatTextFieldView.setProperties([.PlaceholderText : "Repeat password",
+        self.passwordRepeatTextFieldView.setProperties([.PlaceholderText : "Repeat password*",
                                                   .Icon : UIImage(named: "PasswordLoginIcon") as Any,
                                                   .KeyboardType : UIKeyboardType.default as Any,
                                                   .ReturnKey: UIReturnKeyType.next as Any,
@@ -97,7 +97,7 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
                                                   .TextFieldDelegate : self,
                                                   .TextFieldIdentifier : "PasswordRepeat"])
         
-        self.nameTextFieldView.setProperties([.PlaceholderText : "Name",
+        self.nameTextFieldView.setProperties([.PlaceholderText : "Name*",
                                               .Icon : nil,
                                               .KeyboardType : UIKeyboardType.default as Any,
                                               .ReturnKey: UIReturnKeyType.go as Any,
@@ -116,14 +116,14 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
         //Check if user is already signed in
         if GIDSignIn.sharedInstance().hasAuthInKeychain() {
             GIDSignIn.sharedInstance().signInSilently()
-            self.loginOverlay.label.text = "Logging in..."
+            self.loginOverlay.label.text = "Signing in..."
             self.loginOverlay.show()
         } else if let user = Auth.auth().currentUser {
             guard let email = user.email else {
                 DebugLogger.log("AutoAuth - Failed to get user info")
                 return
             }
-            self.loginOverlay.label.text = "Logging in..."
+            self.loginOverlay.label.text = "Signing in..."
             self.loginOverlay.show()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: {() -> Void in
                 self.loginSuccess(WalletManagerUser("", email, AccountProvider.WalletManager))
@@ -198,7 +198,7 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
             return
         }
         
-        self.loginOverlay.label.text = "Logging in..."
+        self.loginOverlay.label.text = "Signing in..."
         self.loginOverlay.show()
         
         //Authenticate user
@@ -361,7 +361,7 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
     //MARK: - GIDSignInUI Delegate
     func sign(_ signIn: GIDSignIn!, dismiss viewController: UIViewController!) {
         viewController.dismiss(animated: true, completion: nil)
-        self.loginOverlay.label.text = "Logging in..."
+        self.loginOverlay.label.text = "Signing in..."
         self.loginOverlay.show()
     }
     
