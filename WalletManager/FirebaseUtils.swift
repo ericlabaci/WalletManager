@@ -137,7 +137,7 @@ class FirebaseUtils {
     }
     
     //MARK: Wallets
-    class func observeUserWalletsAdded(with completion: @escaping (String, String, Int) -> Void) {
+    class func observeUserWalletsAdded(with completion: @escaping (String, String, String, Int) -> Void) {
         self.databaseReference.child(FirebaseNodes.Users.Root).child(FirebaseUtils.getUID()!).child(FirebaseNodes.Users.Wallets).observe(.childAdded, with: { (snapshot) -> Void in
             //Get wallet ID
             let walletID = snapshot.key
@@ -146,9 +146,11 @@ class FirebaseUtils {
                 //Check if all fields are added
                 if snapshot.hasChild(FirebaseNodes.Wallets.CreationTime) {
                     let dict = snapshot.value as! [String : Any]
-                    if let walletName = dict[FirebaseNodes.Wallets.Name] as? String, let creationTime = dict[FirebaseNodes.Wallets.CreationTime] as? Int {
+                    if let walletName = dict[FirebaseNodes.Wallets.Name] as? String,
+                        let walletDescription = dict[FirebaseNodes.Wallets.Description] as? String,
+                        let creationTime = dict[FirebaseNodes.Wallets.CreationTime] as? Int {
                         self.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).removeAllObservers()
-                        completion(walletID, walletName, creationTime)
+                        completion(walletID, walletName, walletDescription, creationTime)
                     }
                 }
             })

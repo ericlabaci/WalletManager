@@ -22,6 +22,9 @@
 		F43117E11F4EFB4600113B61 /* MyWalletsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43117E01F4EFB4600113B61 /* MyWalletsViewController.swift */; };
 		F43117E61F4EFFAF00113B61 /* WalletTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43117E41F4EFFAF00113B61 /* WalletTableViewCell.swift */; };
 		F43117E71F4EFFAF00113B61 /* WalletTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F43117E51F4EFFAF00113B61 /* WalletTableViewCell.xib */; };
+		F43117EB1F4F334F00113B61 /* WalletSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43117EA1F4F334F00113B61 /* WalletSummaryViewController.swift */; };
+		F43117EE1F4F3E6800113B61 /* MemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43117EC1F4F3E6800113B61 /* MemberTableViewCell.swift */; };
+		F43117EF1F4F3E6800113B61 /* MemberTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F43117ED1F4F3E6800113B61 /* MemberTableViewCell.xib */; };
 		F46303201F2228CF00ADBF5A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F463031F1F2228CF00ADBF5A /* GoogleService-Info.plist */; };
 		F48032EC1F4E139E008031AE /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48032EB1F4E139E008031AE /* DateUtils.swift */; };
 		F4AC7B791F17D22A009E0251 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AC7B781F17D22A009E0251 /* AppDelegate.swift */; };
@@ -51,6 +54,9 @@
 		F43117E01F4EFB4600113B61 /* MyWalletsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyWalletsViewController.swift; sourceTree = "<group>"; };
 		F43117E41F4EFFAF00113B61 /* WalletTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletTableViewCell.swift; sourceTree = "<group>"; };
 		F43117E51F4EFFAF00113B61 /* WalletTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WalletTableViewCell.xib; sourceTree = "<group>"; };
+		F43117EA1F4F334F00113B61 /* WalletSummaryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletSummaryViewController.swift; sourceTree = "<group>"; };
+		F43117EC1F4F3E6800113B61 /* MemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemberTableViewCell.swift; sourceTree = "<group>"; };
+		F43117ED1F4F3E6800113B61 /* MemberTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MemberTableViewCell.xib; sourceTree = "<group>"; };
 		F463031F1F2228CF00ADBF5A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F48032EB1F4E139E008031AE /* DateUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateUtils.swift; sourceTree = "<group>"; };
 		F4AC7B751F17D22A009E0251 /* WalletManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WalletManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -124,8 +130,9 @@
 			children = (
 				F43117DE1F4EFA3700113B61 /* MyWallets.storyboard */,
 				F43117E01F4EFB4600113B61 /* MyWalletsViewController.swift */,
-				F43117E51F4EFFAF00113B61 /* WalletTableViewCell.xib */,
-				F43117E41F4EFFAF00113B61 /* WalletTableViewCell.swift */,
+				F43117EA1F4F334F00113B61 /* WalletSummaryViewController.swift */,
+				F43117F11F4F3E7600113B61 /* MemberCell */,
+				F43117F01F4F3E7000113B61 /* WalletCell */,
 			);
 			name = MyWallets;
 			sourceTree = "<group>";
@@ -137,6 +144,24 @@
 				F41995701F1938330055E2AA /* SettingsViewController.swift */,
 			);
 			name = Settings;
+			sourceTree = "<group>";
+		};
+		F43117F01F4F3E7000113B61 /* WalletCell */ = {
+			isa = PBXGroup;
+			children = (
+				F43117E51F4EFFAF00113B61 /* WalletTableViewCell.xib */,
+				F43117E41F4EFFAF00113B61 /* WalletTableViewCell.swift */,
+			);
+			name = WalletCell;
+			sourceTree = "<group>";
+		};
+		F43117F11F4F3E7600113B61 /* MemberCell */ = {
+			isa = PBXGroup;
+			children = (
+				F43117ED1F4F3E6800113B61 /* MemberTableViewCell.xib */,
+				F43117EC1F4F3E6800113B61 /* MemberTableViewCell.swift */,
+			);
+			name = MemberCell;
 			sourceTree = "<group>";
 		};
 		F46303211F2234B300ADBF5A /* UI */ = {
@@ -298,6 +323,7 @@
 				F43117E71F4EFFAF00113B61 /* WalletTableViewCell.xib in Resources */,
 				F41995741F193AEC0055E2AA /* Assets.xcassets in Resources */,
 				F4212C3F1F3397090040A809 /* LoginTextFieldView.xib in Resources */,
+				F43117EF1F4F3E6800113B61 /* MemberTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,6 +409,8 @@
 				F4AC7B791F17D22A009E0251 /* AppDelegate.swift in Sources */,
 				F419956D1F192B920055E2AA /* ActivityIndicatorOverlay.swift in Sources */,
 				F422C4CF1F2133090085AF63 /* WalletManagerUser.swift in Sources */,
+				F43117EB1F4F334F00113B61 /* WalletSummaryViewController.swift in Sources */,
+				F43117EE1F4F3E6800113B61 /* MemberTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

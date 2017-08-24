@@ -12,6 +12,7 @@ let WalletTableViewCellReuseIdentifier: String! = "WalletTableViewCellReuseIdent
 
 class WalletTableViewCell: UITableViewCell {
     @IBOutlet weak var walletNameLabel: UILabel!
+    @IBOutlet weak var walletDescriptionLabel: UILabel!
     @IBOutlet private weak var createdAtLabel: UILabel!
 
     //MARK: - Functions

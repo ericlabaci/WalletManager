@@ -55,11 +55,86 @@
                     <navigationItem key="navigationItem" title="My Wallets" id="2aq-00-cVx"/>
                     <connections>
                         <outlet property="walletsTableView" destination="En4-hn-M7Q" id="gWL-7q-6D7"/>
+                        <segue destination="Pc2-L0-igT" kind="show" identifier="ViewWalletSegue" id="ImN-hK-NCy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="unj-EA-NFM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2561.25" y="106.69014084507042"/>
+        </scene>
+        <!--Wallet Summary View Controller-->
+        <scene sceneID="vMz-Si-U6Y">
+            <objects>
+                <viewController id="Pc2-L0-igT" customClass="WalletSummaryViewController" customModule="WalletManager" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="vPw-p0-MAQ"/>
+                        <viewControllerLayoutGuide type="bottom" id="8II-Qv-442"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="wiD-iH-231">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wallet Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N6q-pg-LfU">
+                                <rect key="frame" x="111.5" y="80" width="97" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wallet description." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rnN-VN-mhA">
+                                <rect key="frame" x="100" y="117" width="120.5" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="enU-MY-AgG">
+                                <rect key="frame" x="0.0" y="198" width="320" height="29"/>
+                                <segments>
+                                    <segment title="Summary"/>
+                                    <segment title="Members"/>
+                                </segments>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <action selector="segmentedControlValueChanged:" destination="Pc2-L0-igT" eventType="valueChanged" id="VIh-ai-w49"/>
+                                </connections>
+                            </segmentedControl>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9gl-A4-sKg">
+                                <rect key="frame" x="0.0" y="227" width="320" height="292"/>
+                            </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yey-nn-wyA">
+                                <rect key="frame" x="0.0" y="227" width="320" height="292"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="yey-nn-wyA" secondAttribute="trailing" id="3Hy-ws-4EF"/>
+                            <constraint firstItem="N6q-pg-LfU" firstAttribute="top" secondItem="vPw-p0-MAQ" secondAttribute="bottom" constant="16" id="4Vt-Tr-Pxv"/>
+                            <constraint firstAttribute="trailing" secondItem="9gl-A4-sKg" secondAttribute="trailing" id="5th-dJ-imd"/>
+                            <constraint firstItem="8II-Qv-442" firstAttribute="top" secondItem="9gl-A4-sKg" secondAttribute="bottom" id="Ak3-Jj-jSJ"/>
+                            <constraint firstItem="8II-Qv-442" firstAttribute="top" secondItem="yey-nn-wyA" secondAttribute="bottom" id="EZa-eG-OZb"/>
+                            <constraint firstItem="rnN-VN-mhA" firstAttribute="top" secondItem="N6q-pg-LfU" secondAttribute="bottom" constant="16" id="TXQ-uD-Bxb"/>
+                            <constraint firstItem="N6q-pg-LfU" firstAttribute="centerX" secondItem="wiD-iH-231" secondAttribute="centerX" id="YUL-hK-Sz9"/>
+                            <constraint firstAttribute="trailing" secondItem="enU-MY-AgG" secondAttribute="trailing" id="Yo7-F6-E50"/>
+                            <constraint firstItem="yey-nn-wyA" firstAttribute="top" secondItem="enU-MY-AgG" secondAttribute="bottom" constant="1" id="ZbO-rg-Gvu"/>
+                            <constraint firstItem="yey-nn-wyA" firstAttribute="leading" secondItem="wiD-iH-231" secondAttribute="leading" id="b4E-3C-hCS"/>
+                            <constraint firstItem="enU-MY-AgG" firstAttribute="leading" secondItem="wiD-iH-231" secondAttribute="leading" id="bEx-SA-LH6"/>
+                            <constraint firstItem="rnN-VN-mhA" firstAttribute="centerX" secondItem="wiD-iH-231" secondAttribute="centerX" id="eqL-fX-Rgr"/>
+                            <constraint firstItem="9gl-A4-sKg" firstAttribute="top" secondItem="enU-MY-AgG" secondAttribute="bottom" constant="1" id="n3K-QP-sbR"/>
+                            <constraint firstItem="enU-MY-AgG" firstAttribute="top" secondItem="rnN-VN-mhA" secondAttribute="bottom" constant="64" id="nMu-Ux-BRs"/>
+                            <constraint firstItem="9gl-A4-sKg" firstAttribute="leading" secondItem="wiD-iH-231" secondAttribute="leading" id="rzd-gp-g6I"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="memberTableView" destination="yey-nn-wyA" id="oca-sy-rzc"/>
+                        <outlet property="segmentedControl" destination="enU-MY-AgG" id="yEX-eG-ldb"/>
+                        <outlet property="summaryView" destination="9gl-A4-sKg" id="a5E-4W-m2G"/>
+                        <outlet property="walletDescriptionLabel" destination="rnN-VN-mhA" id="rIZ-Kv-4l4"/>
+                        <outlet property="walletNameLabel" destination="N6q-pg-LfU" id="7YO-z0-wa1"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RJX-r4-3oW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3616.875" y="106.69014084507042"/>
         </scene>
     </scenes>
 </document>

@@ -13,7 +13,7 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBOutlet weak var walletsTableView: UITableView!
     
     //MARK: - Variables
-    var walletNameArray: [(id: String, name: String, time: Int)] = []
+    var walletNameArray: [(id: String, name: String, description: String, time: Int)] = []
     
     //MARK: - Functions
     override func viewDidLoad() {
@@ -25,8 +25,8 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
         self.walletsTableView.delegate = self
         self.walletsTableView.dataSource = self
         
-        FirebaseUtils.observeUserWalletsAdded(with: { (walletID, name, time) -> Void in
-            self.walletNameArray.append((id: walletID, name: name, time: time))
+        FirebaseUtils.observeUserWalletsAdded(with: { (walletID, name, description, time) -> Void in
+            self.walletNameArray.append((id: walletID, name: name, description: description, time: time))
             self.walletNameArray.sort(by: { (tuple1, tuple2) -> Bool in
                 return tuple1.id < tuple2.id
             })
@@ -52,11 +52,15 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
         return self.walletNameArray.count
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 64.0
+    }
+    
     //MARK: - TableViewDelegate
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: WalletTableViewCellReuseIdentifier, for: indexPath) as? WalletTableViewCell {
-        
             cell.walletNameLabel.text = self.walletNameArray[indexPath.row].name
+            cell.walletDescriptionLabel.text = self.walletNameArray[indexPath.row].description
             cell.setCreationDateLabel(creationDate: DateUtils.firebaseTimeToCreationTimeFormat(millis: self.walletNameArray[indexPath.row].time))
             
             return cell
@@ -67,10 +71,15 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        self.performSegue(withIdentifier: "ViewWalletSegue", sender: indexPath)
     }
 
     //MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-
+        if let indexPath = sender as? IndexPath {
+            if let walletSummaryVC = segue.destination as? WalletSummaryViewController {
+                walletSummaryVC.walletInfo = self.walletNameArray[indexPath.row]
+            }
+        }
     }
 }
