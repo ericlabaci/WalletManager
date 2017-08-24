@@ -44,14 +44,6 @@ class SettingsViewController : UIViewController {
         }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-    
     //MARK: - IBActions
     @IBAction func logout(_ sender: Any) {
         let alert = UIAlertController.init(title: "Are you sure you want to sign out?", message: nil, preferredStyle: UIAlertControllerStyle.alert)
@@ -59,8 +51,7 @@ class SettingsViewController : UIViewController {
             self.loginOverlay.show()
             
             do {
-                self.databaseReference.child("users").child(FirebaseUtils.getUID() ?? "").child("name").removeAllObservers()
-                self.databaseReference.child("users").child(FirebaseUtils.getUID() ?? "").child("messages").removeAllObservers()
+                FirebaseUtils.removeUserNameObserver()
 
                 switch self.user.accountProvider {
                 case AccountProvider.Facebook:
@@ -69,8 +60,6 @@ class SettingsViewController : UIViewController {
                     
                 case AccountProvider.Google:
                     GIDSignIn.sharedInstance().disconnect()
-//                    NotificationCenter.default.addObserver(self, selector: #selector(SettingsViewController.logoutSuccess), name: Notification.Name.GoogleLogoutSuccess, object: nil)
-//                    NotificationCenter.default.addObserver(self, selector: #selector(SettingsViewController.logoutFail), name: Notification.Name.GoogleLogoutFail, object: nil)
                     break
                     
                 case AccountProvider.WalletManager:

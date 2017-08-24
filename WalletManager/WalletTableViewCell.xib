@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="WalletTableViewCell" customModule="WalletManager" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WalletName" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wNH-6t-DOh">
+                        <rect key="frame" x="8" y="11" width="217.5" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="usb-Lj-8LF">
+                        <rect key="frame" x="233.5" y="11.5" width="78.5" height="21.5"/>
+                        <string key="text">Created at:
+24/08/2017 09:41</string>
+                        <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="usb-Lj-8LF" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="RkE-kL-sbA"/>
+                    <constraint firstItem="usb-Lj-8LF" firstAttribute="leading" secondItem="wNH-6t-DOh" secondAttribute="trailing" constant="8" id="TvB-Ry-uTJ"/>
+                    <constraint firstItem="wNH-6t-DOh" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="hj6-EG-jTB"/>
+                    <constraint firstItem="wNH-6t-DOh" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="oG5-ar-d97"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="usb-Lj-8LF" secondAttribute="trailing" id="oou-75-ej5"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="createdAtLabel" destination="usb-Lj-8LF" id="wCb-uL-zye"/>
+                <outlet property="walletNameLabel" destination="wNH-6t-DOh" id="3Jj-by-meT"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>

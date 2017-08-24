@@ -34,6 +34,8 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
     
     var isRegistering: Bool = false
     
+    var user: WalletManagerUser?
+    
     //MARK: - Original Values
     var emailViewCenterYOriginalConstant: CGFloat!
     var passwordViewTopOriginalConstant: CGFloat!
@@ -147,6 +149,28 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    //MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let user = sender as? WalletManagerUser {
+            guard let tabBarController = segue.destination as? UITabBarController,
+                let homeVC = tabBarController.childViewControllers[0].childViewControllers[0] as? HomeViewController,
+                let myWalletsVC = tabBarController.childViewControllers[1].childViewControllers[0] as? MyWalletsViewController,
+                let settingsVC = tabBarController.childViewControllers[2].childViewControllers[0] as? SettingsViewController else {
+                    return
+            }
+            
+            homeVC.user = user
+            settingsVC.user = user
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                self.loginOverlay.hide()
+                self.emailTextFieldView.setText("")
+                self.passwordTextFieldView.setText("")
+                self.passwordRepeatTextFieldView.setText("")
+                self.nameTextFieldView.setText("")
+            }
+        }
     }
     
     //MARK: - IBActions
@@ -372,23 +396,7 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
     
     //MARK: - Login
     func loginSuccess(_ user: WalletManagerUser) {
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        guard let tabBarController = storyboard.instantiateInitialViewController(),
-              let homeVC = tabBarController.childViewControllers[0].childViewControllers[0] as? HomeViewController,
-              let settingsVC = tabBarController.childViewControllers[2].childViewControllers[0] as? SettingsViewController else {
-            return
-        }
-        
-        homeVC.user = user
-        settingsVC.user = user
-        self.present(tabBarController, animated: true, completion: nil)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-            self.loginOverlay.hide()
-            self.emailTextFieldView.setText("")
-            self.passwordTextFieldView.setText("")
-            self.passwordRepeatTextFieldView.setText("")
-            self.nameTextFieldView.setText("")
-        }
+        self.performSegue(withIdentifier: "LoginToMainSegue", sender: user)
     }
     
     func loginFail() {

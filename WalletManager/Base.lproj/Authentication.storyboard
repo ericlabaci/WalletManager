@@ -215,11 +215,61 @@
                         <outlet property="passwordViewTopConstraint" destination="AUd-FU-KNb" id="oss-gc-Tw8"/>
                         <outlet property="registerButton" destination="pSA-QD-kQp" id="M9p-Vf-Scp"/>
                         <outlet property="registerFieldsView" destination="APO-Iu-Jo6" id="Rta-it-NqM"/>
+                        <segue destination="taR-Vx-A9x" kind="show" identifier="LoginToMainSegue" id="mJU-VI-kgv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="116.25" y="122.53521126760563"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="nmJ-CQ-ASk">
+            <objects>
+                <tabBarController id="taR-Vx-A9x" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="qsG-13-cjb">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="OGU-Up-4CK" kind="relationship" relationship="viewControllers" id="1YI-LA-rfe"/>
+                        <segue destination="Ima-tY-Pt8" kind="relationship" relationship="viewControllers" id="JHV-Ny-30S"/>
+                        <segue destination="NfQ-xo-aN1" kind="relationship" relationship="viewControllers" id="S2y-La-lei"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Sqp-rV-cDc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="994" y="123"/>
+        </scene>
+        <!--Home-->
+        <scene sceneID="fKr-dv-ixZ">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Home" id="OGU-Up-4CK" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="l7E-q7-z64"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5ym-7a-h1G" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1845" y="60"/>
+        </scene>
+        <!--Settings-->
+        <scene sceneID="dsr-tD-YvH">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Settings" id="NfQ-xo-aN1" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="6Xy-rL-JBG"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CzQ-lL-X0u" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1859" y="180"/>
+        </scene>
+        <!--MyWallets-->
+        <scene sceneID="e8r-cr-Zwd">
+            <objects>
+                <viewControllerPlaceholder storyboardName="MyWallets" id="Ima-tY-Pt8" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="Od8-3i-XlB"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hW2-Qm-pkC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1870" y="123"/>
         </scene>
     </scenes>
     <resources>

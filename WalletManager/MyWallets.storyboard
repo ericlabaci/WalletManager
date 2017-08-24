@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ceM-1u-F3m">
+    <device id="retina4_0" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--My Wallets-->
+        <scene sceneID="jXJ-d7-mj3">
+            <objects>
+                <navigationController id="ceM-1u-F3m" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="My Wallets" id="yUK-76-1Bg"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Sh1-VT-8bV">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="pBc-Dh-7G7" kind="relationship" relationship="rootViewController" id="V0n-fH-Lns"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Z9q-dK-vwW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1606" y="107"/>
+        </scene>
+        <!--My Wallets-->
+        <scene sceneID="llx-1f-OtQ">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="pBc-Dh-7G7" customClass="MyWalletsViewController" customModule="WalletManager" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="bEF-q5-LeP"/>
+                        <viewControllerLayoutGuide type="bottom" id="q0r-jc-XH5"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Prg-Wb-YTN">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="En4-hn-M7Q">
+                                <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="En4-hn-M7Q" firstAttribute="top" secondItem="bEF-q5-LeP" secondAttribute="bottom" id="Gbs-RA-HIy"/>
+                            <constraint firstItem="En4-hn-M7Q" firstAttribute="leading" secondItem="Prg-Wb-YTN" secondAttribute="leading" id="gwT-3h-CS1"/>
+                            <constraint firstItem="q0r-jc-XH5" firstAttribute="top" secondItem="En4-hn-M7Q" secondAttribute="bottom" id="tk6-CX-uNe"/>
+                            <constraint firstAttribute="trailing" secondItem="En4-hn-M7Q" secondAttribute="trailing" id="u3g-qk-9a0"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="My Wallets" id="2aq-00-cVx"/>
+                    <connections>
+                        <outlet property="walletsTableView" destination="En4-hn-M7Q" id="gWL-7q-6D7"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="unj-EA-NFM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2561.25" y="106.69014084507042"/>
+        </scene>
+    </scenes>
+</document>
