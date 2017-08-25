@@ -22,8 +22,11 @@ class MemberTableViewCell: UITableViewCell {
                 self.memberGroupLabel.text = newValue
                 if newValue == "Owner" {
                     self.memberGroupLabel.textColor = UIColor(red: 45 / 255.0, green: 175 / 255.0, blue: 47 / 255.0, alpha: 1.0)
-                } else {
+                } else if newValue == "Member" {
                     self.memberGroupLabel.textColor = UIColor(red: 64 / 255.0, green: 83 / 255.0, blue: 249 / 255.0, alpha: 1.0)
+                } else {
+                    //Guest
+                    self.memberGroupLabel.textColor = UIColor(red: 206 / 255.0, green: 203 / 255.0, blue: 0 / 255.0, alpha: 1.0)
                 }
             }
         }

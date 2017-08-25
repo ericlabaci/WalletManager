@@ -18,7 +18,28 @@ class WalletSummaryViewController: UIViewController, UITableViewDelegate, UITabl
     
     //MARK: - Variables
     var walletInfo: (id: String, name: String, description: String, time: Int)!
-    var memberArray: [(id: String, name: String, group: String)] = []
+    var memberArray: [Member] = []
+    
+    let sortMembersClosure = { (member1: Member, member2: Member) -> Bool in
+        let group1 = member1.group
+        let group2 = member2.group
+        if group1 == group2 {
+            return member1.name < member2.name
+        }
+        if group1 == "Owner" {
+            return true
+        } else if group2 == "Owner" {
+            return false
+        } else if group1 == "Member" {
+            return true
+        } else if group2 == "Member" {
+            return false
+        } else if group1 == "Guest" {
+            return true
+        } else {
+            return false
+        }
+    }
     
     //MARK: - Functions
     override func viewDidLoad() {
@@ -44,7 +65,7 @@ class WalletSummaryViewController: UIViewController, UITableViewDelegate, UITabl
         self.memberTableView.register(MemberTableViewCell.classForCoder(), forCellReuseIdentifier: MemberTableViewCellReuseIdentifier)
         self.memberTableView.register(UINib(nibName: "MemberTableViewCell", bundle: nil), forCellReuseIdentifier: MemberTableViewCellReuseIdentifier)
 
-        //Fetch members
+        //Fetch members (new and existing ones)
         FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(self.walletInfo.id).child(FirebaseNodes.Wallets.Members.Root).observe(.childAdded, with: { (snapshot) -> Void in
             let userID = snapshot.key
             if snapshot.hasChild(FirebaseNodes.Wallets.Members.Group) {
@@ -52,17 +73,23 @@ class WalletSummaryViewController: UIViewController, UITableViewDelegate, UITabl
                 if let userGroup = dict[FirebaseNodes.Wallets.Members.Group] as? String {
                     FirebaseUtils.databaseReference.child(FirebaseNodes.Users.Root).child(userID).child(FirebaseNodes.Users.Name).observeSingleEvent(of: .value, with: { (snapshot) -> Void in
                         if let userName = snapshot.value as? String {
-                            self.memberArray.append((id: userID, name: userName, group: userGroup))
-                            self.memberArray.sort(by: { (tuple1, tuple2) -> Bool in
-                                if tuple1.group == tuple2.group {
-                                    return tuple1.name < tuple2.name
-                                }
-                                return tuple1.group > tuple2.group
-                            })
-                            if let i = self.memberArray.index(where: {$0.id == userID}) {
-                                self.memberTableView.insertRows(at: [IndexPath(row: i, section: 0)], with: .fade)
-                            }
+                            self.memberArray.append(Member(id: userID, name: userName, group: userGroup))
+                            self.memberArray.sort(by: self.sortMembersClosure)
+                            self.memberTableView.reloadData()
                         }
+                        //Fetch member property changes
+                        FirebaseUtils.databaseReference.child(FirebaseNodes.Users.Root).child(userID).observe(.childChanged, with: { (snapshot) -> Void in
+                            //Name changed
+                            if snapshot.key == FirebaseNodes.Users.Name {
+                                if let userName = snapshot.value as? String {
+                                    if let i = self.memberArray.index(where: {$0.id == userID}) {
+                                        self.memberArray[i].name = userName
+                                        self.memberArray.sort(by: self.sortMembersClosure)
+                                        self.memberTableView.reloadAllSections(with: .fade)
+                                    }
+                                }
+                            }
+                        })
                     })
                 }
             }
@@ -77,17 +104,8 @@ class WalletSummaryViewController: UIViewController, UITableViewDelegate, UITabl
                     //Get member index (i)
                     if let i = self.memberArray.index(where: {$0.id == userID}) {
                         self.memberArray[i].group = userGroup
-                        self.memberArray.sort(by: { (tuple1, tuple2) -> Bool in
-                            if tuple1.group == tuple2.group {
-                                return tuple1.name < tuple2.name
-                            }
-                            return tuple1.group > tuple2.group
-                        })
-                        //Get new member index (j) and update both rows (i and j)
-                        if let j = self.memberArray.index(where: {$0.id == userID}) {
-                            self.memberTableView.reloadRows(at: [IndexPath(row: i, section: 0)], with: .fade)
-                            self.memberTableView.reloadRows(at: [IndexPath(row: j, section: 0)], with: .fade)
-                        }
+                        self.memberArray.sort(by: self.sortMembersClosure)
+                        self.memberTableView.reloadAllSections(with: .fade)
                     }
                 }
             }
@@ -100,6 +118,7 @@ class WalletSummaryViewController: UIViewController, UITableViewDelegate, UITabl
                 self.memberArray.remove(at: i)
                 self.memberTableView.deleteRows(at: [IndexPath(row: i, section: 0)], with: .fade)
             }
+            FirebaseUtils.databaseReference.child(FirebaseNodes.Users.Root).child(userID).removeAllObservers()
         })
         
         //Fetch own removal
@@ -157,5 +176,13 @@ class WalletSummaryViewController: UIViewController, UITableViewDelegate, UITabl
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+}
+
+private extension UITableView {
+    func reloadAllSections(with reloadRowAnimation: UITableViewRowAnimation) {
+        let range = NSMakeRange(0, self.numberOfSections)
+        let sections = NSIndexSet(indexesIn: range)
+        self.reloadSections(sections as IndexSet, with: reloadRowAnimation)
     }
 }
