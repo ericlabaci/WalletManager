@@ -24,3 +24,11 @@ extension UIImageView {
         self.addSubview(blurEffectView)
     }
 }
+
+extension UITableView {
+    func reloadAllSections(with reloadRowAnimation: UITableViewRowAnimation) {
+        let range = NSMakeRange(0, self.numberOfSections)
+        let sections = NSIndexSet(indexesIn: range)
+        self.reloadSections(sections as IndexSet, with: reloadRowAnimation)
+    }
+}

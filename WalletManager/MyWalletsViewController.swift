@@ -51,6 +51,12 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
             if self.numberOfWallets == self.walletNameArray.count {
                 self.hideLoadingView()
             }
+            FirebaseUtils.observeWalletName(walletID: walletID, with: { (walletID, dict) -> Void in
+                if let i = self.walletNameArray.index(where: {$0.id == walletID}) {
+                    self.walletNameArray[i].name = dict
+                    self.walletsTableView.reloadAllSections(with: .fade)
+                }
+            })
         })
         
         FirebaseUtils.observeUserWalletsRemoved(with: { (walletID) -> Void in
@@ -60,6 +66,7 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
             }
         })
     }
+    
     
     //MARK: - TableViewDataSource
     func numberOfSections(in tableView: UITableView) -> Int {

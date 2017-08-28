@@ -14,6 +14,7 @@ class WalletSummaryViewController: UIViewController, UITableViewDelegate, UITabl
     @IBOutlet weak var walletDescriptionLabel: UILabel!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var summaryView: UIView!
+    @IBOutlet weak var memberView: UIView!
     @IBOutlet weak var memberTableView: UITableView!
     
     //MARK: - Variables
@@ -58,12 +59,12 @@ class WalletSummaryViewController: UIViewController, UITableViewDelegate, UITabl
         
         self.summaryView.isHidden = false
         
+        self.memberView.isHidden = true
+        self.memberTableView.register(MemberTableViewCell.classForCoder(), forCellReuseIdentifier: MemberTableViewCellReuseIdentifier)
+        self.memberTableView.register(UINib(nibName: "MemberTableViewCell", bundle: nil), forCellReuseIdentifier: MemberTableViewCellReuseIdentifier)
         self.memberTableView.separatorStyle = .none
         self.memberTableView.delegate = self
         self.memberTableView.dataSource = self
-        self.memberTableView.isHidden = true
-        self.memberTableView.register(MemberTableViewCell.classForCoder(), forCellReuseIdentifier: MemberTableViewCellReuseIdentifier)
-        self.memberTableView.register(UINib(nibName: "MemberTableViewCell", bundle: nil), forCellReuseIdentifier: MemberTableViewCellReuseIdentifier)
 
         //Fetch members (new and existing ones)
         FirebaseUtils.fetchWalletMembers(walletID: self.walletInfo.id, completion: { (member) -> Void in
@@ -119,10 +120,10 @@ class WalletSummaryViewController: UIViewController, UITableViewDelegate, UITabl
             switch index {
             case 0:
                 self.summaryView.isHidden = false
-                self.memberTableView.isHidden = true
+                self.memberView.isHidden = true
             case 1:
                 self.summaryView.isHidden = true
-                self.memberTableView.isHidden = false
+                self.memberView.isHidden = false
             default:
                 break
             }
@@ -152,13 +153,5 @@ class WalletSummaryViewController: UIViewController, UITableViewDelegate, UITabl
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-    }
-}
-
-private extension UITableView {
-    func reloadAllSections(with reloadRowAnimation: UITableViewRowAnimation) {
-        let range = NSMakeRange(0, self.numberOfSections)
-        let sections = NSIndexSet(indexesIn: range)
-        self.reloadSections(sections as IndexSet, with: reloadRowAnimation)
     }
 }

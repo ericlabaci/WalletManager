@@ -35,6 +35,7 @@
 		F4AC7B8F1F17DA02009E0251 /* LoginTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AC7B8E1F17DA02009E0251 /* LoginTextFieldView.swift */; };
 		F4E066C41F190A280057C1E5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E066C31F190A280057C1E5 /* Extensions.swift */; };
 		F4E066C91F190D310057C1E5 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E066C81F190D310057C1E5 /* HomeViewController.swift */; };
+		F4FE0C401F5498EC00A1D6E6 /* NewWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FE0C3F1F5498EC00A1D6E6 /* NewWalletViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +72,7 @@
 		F4AC7B921F17E0F1009E0251 /* WalletManager-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WalletManager-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4E066C31F190A280057C1E5 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		F4E066C81F190D310057C1E5 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		F4FE0C3F1F5498EC00A1D6E6 /* NewWalletViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewWalletViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,16 +113,6 @@
 			name = WalletSummary;
 			sourceTree = "<group>";
 		};
-		F4160DB21F50A5240027706C /* MyWallets */ = {
-			isa = PBXGroup;
-			children = (
-				F43117DE1F4EFA3700113B61 /* MyWallets.storyboard */,
-				F43117E01F4EFB4600113B61 /* MyWalletsViewController.swift */,
-				F43117F01F4F3E7000113B61 /* WalletCell */,
-			);
-			name = MyWallets;
-			sourceTree = "<group>";
-		};
 		F41995721F1939170055E2AA /* LaunchScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -150,7 +142,10 @@
 		F43117E81F4F1EB700113B61 /* MyWallets */ = {
 			isa = PBXGroup;
 			children = (
-				F4160DB21F50A5240027706C /* MyWallets */,
+				F43117DE1F4EFA3700113B61 /* MyWallets.storyboard */,
+				F43117E01F4EFB4600113B61 /* MyWalletsViewController.swift */,
+				F4FE0C3E1F54989600A1D6E6 /* NewWallet */,
+				F43117F01F4F3E7000113B61 /* WalletCell */,
 				F4160DB11F50A51F0027706C /* WalletSummary */,
 			);
 			name = MyWallets;
@@ -266,6 +261,14 @@
 				F4E066C81F190D310057C1E5 /* HomeViewController.swift */,
 			);
 			name = Home;
+			sourceTree = "<group>";
+		};
+		F4FE0C3E1F54989600A1D6E6 /* NewWallet */ = {
+			isa = PBXGroup;
+			children = (
+				F4FE0C3F1F5498EC00A1D6E6 /* NewWalletViewController.swift */,
+			);
+			name = NewWallet;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -416,6 +419,7 @@
 			files = (
 				F43117E61F4EFFAF00113B61 /* WalletTableViewCell.swift in Sources */,
 				F422AAE31F311FCF0063B38F /* FirebaseUtils.swift in Sources */,
+				F4FE0C401F5498EC00A1D6E6 /* NewWalletViewController.swift in Sources */,
 				F4E066C91F190D310057C1E5 /* HomeViewController.swift in Sources */,
 				F422C4D11F2139BA0085AF63 /* Constants.swift in Sources */,
 				F48032EC1F4E139E008031AE /* DateUtils.swift in Sources */,
