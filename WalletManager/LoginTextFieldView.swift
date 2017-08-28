@@ -29,7 +29,6 @@ class LoginTextFieldView: UIView {
     //MARK: - Outlets
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var loginTextField: LoginTextField!
-    @IBOutlet weak var iconImageView: UIImageView!
     
     //MARK: - Functions
     override init(frame: CGRect) {
@@ -131,8 +130,6 @@ class LoginTextFieldView: UIView {
     
     //MARK: - Icon
     func setIcon(_ iconImage: UIImage?) {
-//        self.iconImageView.image = iconImage
-        
         let imageView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 24.0, height: 24.0))
         imageView.image = iconImage
         imageView.contentMode = .scaleAspectFit

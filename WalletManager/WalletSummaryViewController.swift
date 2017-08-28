@@ -66,73 +66,49 @@ class WalletSummaryViewController: UIViewController, UITableViewDelegate, UITabl
         self.memberTableView.register(UINib(nibName: "MemberTableViewCell", bundle: nil), forCellReuseIdentifier: MemberTableViewCellReuseIdentifier)
 
         //Fetch members (new and existing ones)
-        FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(self.walletInfo.id).child(FirebaseNodes.Wallets.Members.Root).observe(.childAdded, with: { (snapshot) -> Void in
-            let userID = snapshot.key
-            if snapshot.hasChild(FirebaseNodes.Wallets.Members.Group) {
-                let dict = snapshot.value as! [String : Any]
-                if let userGroup = dict[FirebaseNodes.Wallets.Members.Group] as? String {
-                    FirebaseUtils.databaseReference.child(FirebaseNodes.Users.Root).child(userID).child(FirebaseNodes.Users.Name).observeSingleEvent(of: .value, with: { (snapshot) -> Void in
-                        if let userName = snapshot.value as? String {
-                            self.memberArray.append(Member(id: userID, name: userName, group: userGroup))
-                            self.memberArray.sort(by: self.sortMembersClosure)
-                            self.memberTableView.reloadData()
-                        }
-                        //Fetch member property changes
-                        FirebaseUtils.databaseReference.child(FirebaseNodes.Users.Root).child(userID).observe(.childChanged, with: { (snapshot) -> Void in
-                            //Name changed
-                            if snapshot.key == FirebaseNodes.Users.Name {
-                                if let userName = snapshot.value as? String {
-                                    if let i = self.memberArray.index(where: {$0.id == userID}) {
-                                        self.memberArray[i].name = userName
-                                        self.memberArray.sort(by: self.sortMembersClosure)
-                                        self.memberTableView.reloadAllSections(with: .fade)
-                                    }
-                                }
-                            }
-                        })
-                    })
+        FirebaseUtils.fetchWalletMembers(walletID: self.walletInfo.id, completion: { (member) -> Void in
+            self.memberArray.append(Member(id: member.id, name: member.name, group: member.group))
+            self.memberArray.sort(by: self.sortMembersClosure)
+            self.memberTableView.reloadData()
+            
+            //Fetch member property changes
+            FirebaseUtils.observeWalletMemberName(userID: member.id, completion: { (name) -> Void in
+                if let i = self.memberArray.index(where: {$0.id == member.id}) {
+                    self.memberArray[i].name = name
+                    self.memberArray.sort(by: self.sortMembersClosure)
+                    self.memberTableView.reloadAllSections(with: .fade)
                 }
-            }
+            })
         })
         
-        //Fetch group changes
-        FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(self.walletInfo.id).child(FirebaseNodes.Wallets.Members.Root).observe(.childChanged, with: { (snapshot) -> Void in
-            let userID = snapshot.key
-            if snapshot.hasChild(FirebaseNodes.Wallets.Members.Group) {
-                let dict = snapshot.value as! [String : Any]
-                if let userGroup = dict[FirebaseNodes.Wallets.Members.Group] as? String {
-                    //Get member index (i)
-                    if let i = self.memberArray.index(where: {$0.id == userID}) {
-                        self.memberArray[i].group = userGroup
-                        self.memberArray.sort(by: self.sortMembersClosure)
-                        self.memberTableView.reloadAllSections(with: .fade)
-                    }
-                }
+        //Fetch member group changes
+        FirebaseUtils.observeWalletMemberGroupChanges(walletID: self.walletInfo.id, completion: { (userID, userGroup) -> Void in
+            //Get member index (i)
+            if let i = self.memberArray.index(where: {$0.id == userID}) {
+                self.memberArray[i].group = userGroup
+                self.memberArray.sort(by: self.sortMembersClosure)
+                self.memberTableView.reloadAllSections(with: .fade)
             }
         })
         
         //Fetch member removal
-        FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(self.walletInfo.id).child(FirebaseNodes.Wallets.Members.Root).observe(.childRemoved, with: { (snapshot) -> Void in
-            let userID = snapshot.key
+        FirebaseUtils.observeWalletUserRemoved(walletID: self.walletInfo.id, completion: { (userID) -> Void in
             if let i = self.memberArray.index(where: {$0.id == userID}) {
                 self.memberArray.remove(at: i)
                 self.memberTableView.deleteRows(at: [IndexPath(row: i, section: 0)], with: .fade)
             }
-            FirebaseUtils.databaseReference.child(FirebaseNodes.Users.Root).child(userID).removeAllObservers()
+            FirebaseUtils.removeAllWalletMemberPropertiesObservers(userID: userID)
         })
         
         //Fetch own removal
-        FirebaseUtils.databaseReference.child(FirebaseNodes.Users.Root).child(FirebaseUtils.getUID()!).child(FirebaseNodes.Users.Wallets).child(self.walletInfo.id).observe(.value, with: { (snapshot) -> Void in
-            if !(snapshot.value is Bool) {
-                FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(self.walletInfo.id).child(FirebaseNodes.Wallets.Members.Root).removeAllObservers()
-                let alertController = UIAlertController(title: "Sorry", message: "You were removed from this wallet. :(", preferredStyle: .alert)
-                let okAction = UIAlertAction(title: "Ok", style: .default, handler: { (action) -> Void in
-                    self.navigationController?.popViewController(animated: true)
-                })
-                
-                alertController.addAction(okAction)
-                self.present(alertController, animated: true, completion: nil)
-            }
+        FirebaseUtils.observeUserRemovalFromWallet(walletID: self.walletInfo.id, completion: { () -> Void in
+            let alertController = UIAlertController(title: "Sorry", message: "You were removed from this wallet. :(", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "Ok", style: .default, handler: { (action) -> Void in
+                self.navigationController?.popViewController(animated: true)
+            })
+            
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
         })
     }
     

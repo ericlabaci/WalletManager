@@ -40,20 +40,40 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="En4-hn-M7Q">
-                                <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                                <rect key="frame" x="0.0" y="96" width="320" height="423"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d05-uu-0cu">
+                                <rect key="frame" x="0.0" y="64" width="320" height="32"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="OuR-Lc-Vsh">
+                                        <rect key="frame" x="150" y="6" width="20" height="20"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="32" id="KrW-IM-l5w"/>
+                                    <constraint firstItem="OuR-Lc-Vsh" firstAttribute="centerY" secondItem="d05-uu-0cu" secondAttribute="centerY" id="el6-Lr-4Jd"/>
+                                    <constraint firstItem="OuR-Lc-Vsh" firstAttribute="centerX" secondItem="d05-uu-0cu" secondAttribute="centerX" id="zfe-IL-hgy"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="En4-hn-M7Q" firstAttribute="top" secondItem="bEF-q5-LeP" secondAttribute="bottom" id="Gbs-RA-HIy"/>
+                            <constraint firstAttribute="trailing" secondItem="d05-uu-0cu" secondAttribute="trailing" id="0qc-mp-xl9"/>
+                            <constraint firstItem="d05-uu-0cu" firstAttribute="leading" secondItem="Prg-Wb-YTN" secondAttribute="leading" id="4Lx-L4-kw7"/>
+                            <constraint firstItem="d05-uu-0cu" firstAttribute="top" secondItem="bEF-q5-LeP" secondAttribute="bottom" id="BUJ-LD-kG8"/>
+                            <constraint firstItem="En4-hn-M7Q" firstAttribute="top" secondItem="d05-uu-0cu" secondAttribute="bottom" id="avC-ib-p9b"/>
                             <constraint firstItem="En4-hn-M7Q" firstAttribute="leading" secondItem="Prg-Wb-YTN" secondAttribute="leading" id="gwT-3h-CS1"/>
+                            <constraint firstItem="d05-uu-0cu" firstAttribute="centerX" secondItem="Prg-Wb-YTN" secondAttribute="centerX" id="iTp-2w-kdB"/>
                             <constraint firstItem="q0r-jc-XH5" firstAttribute="top" secondItem="En4-hn-M7Q" secondAttribute="bottom" id="tk6-CX-uNe"/>
                             <constraint firstAttribute="trailing" secondItem="En4-hn-M7Q" secondAttribute="trailing" id="u3g-qk-9a0"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="My Wallets" id="2aq-00-cVx"/>
                     <connections>
+                        <outlet property="loadingView" destination="d05-uu-0cu" id="6hv-nc-va0"/>
+                        <outlet property="loadingViewHeightConstraint" destination="KrW-IM-l5w" id="oZs-ub-Cg8"/>
                         <outlet property="walletsTableView" destination="En4-hn-M7Q" id="gWL-7q-6D7"/>
                         <segue destination="Pc2-L0-igT" kind="show" identifier="ViewWalletSegue" id="ImN-hK-NCy"/>
                     </connections>

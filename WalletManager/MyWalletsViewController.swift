@@ -11,9 +11,15 @@ import UIKit
 class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     //MARK: - IBOutlets
     @IBOutlet weak var walletsTableView: UITableView!
+    @IBOutlet weak var loadingView: UIView!
     
+    //MARK: - Constraints
+    @IBOutlet weak var loadingViewHeightConstraint: NSLayoutConstraint!
+    var loadingViewHeightCOnstraintOriginalValue: CGFloat!
+
     //MARK: - Variables
     var walletNameArray: [(id: String, name: String, description: String, time: Int)] = []
+    var numberOfWallets: Int = 0
     
     //MARK: - Functions
     override func viewDidLoad() {
@@ -25,6 +31,15 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
         self.walletsTableView.delegate = self
         self.walletsTableView.dataSource = self
         
+        self.loadingViewHeightCOnstraintOriginalValue = self.loadingViewHeightConstraint.constant
+        
+        FirebaseUtils.databaseReference.child(FirebaseNodes.Users.Root).child(FirebaseUtils.getUID()!).child(FirebaseNodes.Users.Wallets).observe(.value, with: { (snapshot) -> Void in
+            self.numberOfWallets = Int(snapshot.childrenCount)
+            if self.numberOfWallets == 0 {
+                self.hideLoadingView()
+            }
+        })
+        
         FirebaseUtils.observeUserWalletsAdded(with: { (walletID, name, description, time) -> Void in
             self.walletNameArray.append((id: walletID, name: name, description: description, time: time))
             self.walletNameArray.sort(by: { (tuple1, tuple2) -> Bool in
@@ -32,6 +47,9 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
             })
             if let i = self.walletNameArray.index(where: {$0.id == walletID}) {
                 self.walletsTableView.insertRows(at: [IndexPath(row: i, section: 0)], with: .fade)
+            }
+            if self.numberOfWallets == self.walletNameArray.count {
+                self.hideLoadingView()
             }
         })
         
@@ -55,7 +73,7 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 64.0
     }
-    
+
     //MARK: - TableViewDelegate
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: WalletTableViewCellReuseIdentifier, for: indexPath) as? WalletTableViewCell {
@@ -74,6 +92,25 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
         self.performSegue(withIdentifier: "ViewWalletSegue", sender: indexPath)
     }
 
+    //MARK: - Loading View
+    func showLoadingView() {
+        self.loadingViewHeightConstraint.constant = self.loadingViewHeightCOnstraintOriginalValue
+        UIView.animate(withDuration: 0.5, animations: { () -> Void in
+            self.loadingView.alpha = 1.0
+            self.view.setNeedsLayout()
+            self.view.layoutIfNeeded()
+        })
+    }
+    
+    func hideLoadingView() {
+        self.loadingViewHeightConstraint.constant = 0.0
+        UIView.animate(withDuration: 0.5, animations: { () -> Void in
+            self.loadingView.alpha = 0.0
+            self.view.setNeedsLayout()
+            self.view.layoutIfNeeded()
+        })
+    }
+    
     //MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let indexPath = sender as? IndexPath {

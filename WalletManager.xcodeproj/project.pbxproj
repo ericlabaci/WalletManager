@@ -102,6 +102,25 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		F4160DB11F50A51F0027706C /* WalletSummary */ = {
+			isa = PBXGroup;
+			children = (
+				F43117EA1F4F334F00113B61 /* WalletSummaryViewController.swift */,
+				F43117F11F4F3E7600113B61 /* MemberCell */,
+			);
+			name = WalletSummary;
+			sourceTree = "<group>";
+		};
+		F4160DB21F50A5240027706C /* MyWallets */ = {
+			isa = PBXGroup;
+			children = (
+				F43117DE1F4EFA3700113B61 /* MyWallets.storyboard */,
+				F43117E01F4EFB4600113B61 /* MyWalletsViewController.swift */,
+				F43117F01F4F3E7000113B61 /* WalletCell */,
+			);
+			name = MyWallets;
+			sourceTree = "<group>";
+		};
 		F41995721F1939170055E2AA /* LaunchScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -122,8 +141,8 @@
 		F422C4CD1F2132F90085AF63 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				F422C4CE1F2133090085AF63 /* WalletManagerUser.swift */,
 				F4160DAF1F5082000027706C /* Member.swift */,
+				F422C4CE1F2133090085AF63 /* WalletManagerUser.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -131,11 +150,8 @@
 		F43117E81F4F1EB700113B61 /* MyWallets */ = {
 			isa = PBXGroup;
 			children = (
-				F43117DE1F4EFA3700113B61 /* MyWallets.storyboard */,
-				F43117E01F4EFB4600113B61 /* MyWalletsViewController.swift */,
-				F43117EA1F4F334F00113B61 /* WalletSummaryViewController.swift */,
-				F43117F11F4F3E7600113B61 /* MemberCell */,
-				F43117F01F4F3E7000113B61 /* WalletCell */,
+				F4160DB21F50A5240027706C /* MyWallets */,
+				F4160DB11F50A51F0027706C /* WalletSummary */,
 			);
 			name = MyWallets;
 			sourceTree = "<group>";
@@ -226,10 +242,10 @@
 			isa = PBXGroup;
 			children = (
 				F422C4D01F2139BA0085AF63 /* Constants.swift */,
+				F48032EB1F4E139E008031AE /* DateUtils.swift */,
 				F422C4CB1F212BD10085AF63 /* DebugLog.swift */,
 				F4E066C31F190A280057C1E5 /* Extensions.swift */,
 				F422AAE21F311FCF0063B38F /* FirebaseUtils.swift */,
-				F48032EB1F4E139E008031AE /* DateUtils.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";

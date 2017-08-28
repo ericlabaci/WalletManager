@@ -156,7 +156,7 @@ class LoginViewController : UIViewController, UITextFieldDelegate, UIViewControl
         if let user = sender as? WalletManagerUser {
             guard let tabBarController = segue.destination as? UITabBarController,
                 let homeVC = tabBarController.childViewControllers[0].childViewControllers[0] as? HomeViewController,
-                let myWalletsVC = tabBarController.childViewControllers[1].childViewControllers[0] as? MyWalletsViewController,
+//                let myWalletsVC = tabBarController.childViewControllers[1].childViewControllers[0] as? MyWalletsViewController,
                 let settingsVC = tabBarController.childViewControllers[2].childViewControllers[0] as? SettingsViewController else {
                     return
             }

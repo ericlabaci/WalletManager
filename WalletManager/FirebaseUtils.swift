@@ -137,8 +137,9 @@ class FirebaseUtils {
     }
     
     //MARK: Wallets
+    //Used in MyWalletsViewController
     class func observeUserWalletsAdded(with completion: @escaping (String, String, String, Int) -> Void) {
-        self.databaseReference.child(FirebaseNodes.Users.Root).child(FirebaseUtils.getUID()!).child(FirebaseNodes.Users.Wallets).observe(.childAdded, with: { (snapshot) -> Void in
+        self.databaseReference.child(FirebaseNodes.Users.Root).child(self.getUID()!).child(FirebaseNodes.Users.Wallets).observe(.childAdded, with: { (snapshot) -> Void in
             //Get wallet ID
             let walletID = snapshot.key
             //Request wallet dictionary
@@ -157,11 +158,74 @@ class FirebaseUtils {
         })
     }
     
+    //Used in MyWalletsViewController
     class func observeUserWalletsRemoved(with completion: @escaping (String) -> Void) {
-        FirebaseUtils.databaseReference.child(FirebaseNodes.Users.Root).child(FirebaseUtils.getUID()!).child(FirebaseNodes.Users.Wallets).observe(.childRemoved, with: { (snapshot) -> Void in
+        self.databaseReference.child(FirebaseNodes.Users.Root).child(self.getUID()!).child(FirebaseNodes.Users.Wallets).observe(.childRemoved, with: { (snapshot) -> Void in
             let walletID = snapshot.key
-            FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).child(FirebaseNodes.Wallets.Name).removeAllObservers()
+            self.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).child(FirebaseNodes.Wallets.Name).removeAllObservers()
             completion(walletID)
+        })
+    }
+    
+    //Used in WalletSummaryViewController
+    class func fetchWalletMembers(walletID: String, completion: @escaping (Member) -> Void) {
+        self.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).child(FirebaseNodes.Wallets.Members.Root).observe(.childAdded, with: { (snapshot) -> Void in
+            let userID = snapshot.key
+            if snapshot.hasChild(FirebaseNodes.Wallets.Members.Group) {
+                let dict = snapshot.value as! [String : Any]
+                if let userGroup = dict[FirebaseNodes.Wallets.Members.Group] as? String {
+                    self.databaseReference.child(FirebaseNodes.Users.Root).child(userID).child(FirebaseNodes.Users.Name).observeSingleEvent(of: .value, with: { (snapshot) -> Void in
+                        if let userName = snapshot.value as? String {
+                            completion(Member(id: userID, name: userName, group: userGroup))
+                        }
+                    })
+                }
+            }
+        })
+    }
+    
+    //Used in WalletSummaryViewController
+    class func observeWalletMemberName(userID: String, completion: @escaping (String) -> Void) {
+        self.databaseReference.child(FirebaseNodes.Users.Root).child(userID).observe(.childChanged, with: { (snapshot) -> Void in
+            //Name changed
+            if snapshot.key == FirebaseNodes.Users.Name {
+                if let userName = snapshot.value as? String {
+                    completion(userName)
+                }
+            }
+        })
+    }
+    
+    //Used in WalletSummaryViewController
+    class func observeWalletMemberGroupChanges(walletID: String, completion: @escaping (String, String) -> Void) {
+        self.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).child(FirebaseNodes.Wallets.Members.Root).observe(.childChanged, with: { (snapshot) -> Void in
+            let userID = snapshot.key
+            if snapshot.hasChild(FirebaseNodes.Wallets.Members.Group) {
+                let dict = snapshot.value as! [String : Any]
+                if let userGroup = dict[FirebaseNodes.Wallets.Members.Group] as? String {
+                    completion(userID, userGroup)
+                }
+            }
+        })
+    }
+    
+    //Used in WalletSummaryViewController
+    class func observeWalletUserRemoved(walletID: String, completion: @escaping (String) -> Void) {
+        self.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).child(FirebaseNodes.Wallets.Members.Root).observe(.childRemoved, with: { (snapshot) -> Void in
+            let userID = snapshot.key
+            completion(userID)
+        })
+    }
+    
+    class func removeAllWalletMemberPropertiesObservers(userID: String) {
+        self.databaseReference.child(FirebaseNodes.Users.Root).child(userID).removeAllObservers()
+    }
+    
+    class func observeUserRemovalFromWallet(walletID: String, completion: @escaping () -> Void) {
+        self.databaseReference.child(FirebaseNodes.Users.Root).child(self.getUID()!).child(FirebaseNodes.Users.Wallets).child(walletID).observe(.value, with: { (snapshot) -> Void in
+            if !(snapshot.value is Bool) {
+                self.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).child(FirebaseNodes.Wallets.Members.Root).removeAllObservers()
+            }
         })
     }
     
