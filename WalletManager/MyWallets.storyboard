@@ -195,8 +195,8 @@
                                     <action selector="segmentedControlValueChanged:" destination="Pc2-L0-igT" eventType="valueChanged" id="VIh-ai-w49"/>
                                 </connections>
                             </segmentedControl>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9gl-A4-sKg">
-                                <rect key="frame" x="500" y="227" width="320" height="292"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9gl-A4-sKg">
+                                <rect key="frame" x="0.0" y="227" width="320" height="292"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FgA-JD-6c3">
                                 <rect key="frame" x="0.0" y="227" width="320" height="292"/>
@@ -215,6 +215,9 @@
                                         <state key="normal" title="Add Member">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <segue destination="PpE-i3-8F2" kind="show" id="E4F-VF-O0t"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -248,6 +251,11 @@
                             <constraint firstItem="9gl-A4-sKg" firstAttribute="leading" secondItem="wiD-iH-231" secondAttribute="leading" id="rzd-gp-g6I"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="IbO-Le-AEM">
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="F3d-o8-W6m">
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="memberTableView" destination="yey-nn-wyA" id="oca-sy-rzc"/>
                         <outlet property="memberView" destination="FgA-JD-6c3" id="XsB-Dc-5mg"/>
@@ -260,6 +268,81 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RJX-r4-3oW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3616.875" y="106.69014084507042"/>
+        </scene>
+        <!--Add Member View Controller-->
+        <scene sceneID="0mQ-fS-QrE">
+            <objects>
+                <viewController id="PpE-i3-8F2" customClass="AddMemberViewController" customModule="WalletManager" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="RGC-fi-lSg"/>
+                        <viewControllerLayoutGuide type="bottom" id="Czv-z3-oED"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="WbH-5h-778">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DX7-Ei-yHQ">
+                                <rect key="frame" x="0.0" y="94" width="320" height="40"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="IfX-cO-L0I">
+                                        <rect key="frame" x="150" y="10" width="20" height="20"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="IfX-cO-L0I" firstAttribute="centerX" secondItem="DX7-Ei-yHQ" secondAttribute="centerX" id="375-wl-Iia"/>
+                                    <constraint firstItem="IfX-cO-L0I" firstAttribute="centerY" secondItem="DX7-Ei-yHQ" secondAttribute="centerY" id="FYx-o6-tQD"/>
+                                    <constraint firstAttribute="height" constant="40" id="IlD-iw-yEs"/>
+                                </constraints>
+                            </view>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7id-nB-eiy">
+                                <rect key="frame" x="0.0" y="64" width="320" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no"/>
+                            </textField>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="e70-3e-Yxi">
+                                <rect key="frame" x="0.0" y="134" width="320" height="345"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nts-wi-Og0">
+                                <rect key="frame" x="0.0" y="479" width="320" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="em5-9L-zAv"/>
+                                </constraints>
+                                <state key="normal" title="Search"/>
+                                <connections>
+                                    <action selector="didTapSearch:" destination="PpE-i3-8F2" eventType="touchUpInside" id="lPi-j1-8RI"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="nts-wi-Og0" firstAttribute="top" secondItem="e70-3e-Yxi" secondAttribute="bottom" id="0iF-lR-jgS"/>
+                            <constraint firstItem="e70-3e-Yxi" firstAttribute="leading" secondItem="WbH-5h-778" secondAttribute="leading" id="2b1-im-B0u"/>
+                            <constraint firstItem="nts-wi-Og0" firstAttribute="leading" secondItem="WbH-5h-778" secondAttribute="leading" id="6Ri-pQ-n7E"/>
+                            <constraint firstItem="DX7-Ei-yHQ" firstAttribute="leading" secondItem="WbH-5h-778" secondAttribute="leading" id="AIv-4U-WKL"/>
+                            <constraint firstAttribute="trailing" secondItem="nts-wi-Og0" secondAttribute="trailing" id="AgK-eX-9qi"/>
+                            <constraint firstItem="7id-nB-eiy" firstAttribute="top" secondItem="RGC-fi-lSg" secondAttribute="bottom" id="CHW-zx-Fh6"/>
+                            <constraint firstItem="e70-3e-Yxi" firstAttribute="top" secondItem="DX7-Ei-yHQ" secondAttribute="bottom" id="GFt-Qn-HcH"/>
+                            <constraint firstItem="Czv-z3-oED" firstAttribute="top" secondItem="nts-wi-Og0" secondAttribute="bottom" id="GaW-SW-yir"/>
+                            <constraint firstItem="7id-nB-eiy" firstAttribute="leading" secondItem="WbH-5h-778" secondAttribute="leading" id="GuP-xz-V20"/>
+                            <constraint firstItem="DX7-Ei-yHQ" firstAttribute="top" secondItem="7id-nB-eiy" secondAttribute="bottom" id="PFJ-4k-WKb"/>
+                            <constraint firstAttribute="trailing" secondItem="7id-nB-eiy" secondAttribute="trailing" id="THT-cd-4kd"/>
+                            <constraint firstAttribute="trailing" secondItem="DX7-Ei-yHQ" secondAttribute="trailing" id="rfa-RM-apL"/>
+                            <constraint firstAttribute="trailing" secondItem="e70-3e-Yxi" secondAttribute="trailing" id="w8B-yp-mIz"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="loadingView" destination="DX7-Ei-yHQ" id="tmM-g2-iDf"/>
+                        <outlet property="loadingViewHeightConstraint" destination="IlD-iw-yEs" id="lvk-8K-QyI"/>
+                        <outlet property="memberTableView" destination="e70-3e-Yxi" id="p6u-Ux-jy5"/>
+                        <outlet property="searchTextField" destination="7id-nB-eiy" id="4ht-n8-oDq"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JwO-hF-Lmv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4642.5" y="106.69014084507042"/>
         </scene>
     </scenes>
 </document>

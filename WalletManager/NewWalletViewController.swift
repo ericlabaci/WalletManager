@@ -37,7 +37,13 @@ class NewWalletViewController: UIViewController {
                         if let error = error {
                             DebugLogger.log("Error creating wallet (setting properties): \(error.localizedDescription)")
                         } else {
-                            self.navigationController?.popViewController(animated: true)
+                            var handle: UInt!
+                            handle = walletReference.observe(.childAdded, with: { (snapshot) -> Void in
+                                if snapshot.key == FirebaseNodes.Wallets.CreationTime {
+                                    walletReference.child(FirebaseNodes.Wallets.Root).removeObserver(withHandle: handle)
+                                    self.navigationController?.popViewController(animated: true)
+                                }
+                            })
                         }
                     })
                 }

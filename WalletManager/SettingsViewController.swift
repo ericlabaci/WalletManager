@@ -51,7 +51,7 @@ class SettingsViewController : UIViewController {
             self.loginOverlay.show()
             
             do {
-                FirebaseUtils.removeUserNameObserver()
+//                FirebaseUtils.removeUserNameObserver()
 
                 switch self.user.accountProvider {
                 case AccountProvider.Facebook:

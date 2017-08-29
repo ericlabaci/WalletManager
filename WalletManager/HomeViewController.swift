@@ -19,8 +19,8 @@ class HomeViewController : UIViewController, UITextFieldDelegate {
     //MARK: - Variables
     var storageReference: StorageReference!
     var user: WalletManagerUser!
-    
-    var nameHandle: UInt?
+
+    private static var userNameHandle: UInt?
     
     var walletNameArray: [(id: String, name: String, time: Int)] = []
 
@@ -28,7 +28,7 @@ class HomeViewController : UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.storageReference = Storage.storage().reference().child("users").child(FirebaseUtils.getUID() ?? "")
+        self.storageReference = Storage.storage().reference().child("usersPrivate").child(FirebaseUtils.getUID() ?? "")
 
         self.imageViewProfile.layer.masksToBounds = true
         self.imageViewProfile.layer.cornerRadius = imageViewProfile.frame.size.width / 2.0
@@ -66,7 +66,7 @@ class HomeViewController : UIViewController, UITextFieldDelegate {
             self.getUserProfileImage()
         }
         
-        FirebaseUtils.observeUserName(with: { (snapshot) in
+        self.observeUserName(with: { (snapshot) in
             if let displayName = snapshot.value as? String {
                 self.user.displayName = displayName
                 UIView.animate(withDuration: 0.1, animations: { () -> Void in
@@ -78,10 +78,7 @@ class HomeViewController : UIViewController, UITextFieldDelegate {
                     })
                 })
             }
-        })        
-//        self.databaseReference.child("messages").queryLimited(toLast: 1).observe(.childAdded, with: { (snapshot) in
-//            self.labelMessage.text = snapshot.value as? String
-//        })
+        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -91,51 +88,6 @@ class HomeViewController : UIViewController, UITextFieldDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    //MARK: - IBActions
-//    @IBAction func searchUser(_ sender: Any) {
-//        if let userName = self.textFieldMessage.text {
-//            if !userName.isEmpty {
-//                self.textFieldMessage.text = ""
-//                FirebaseUtils.databaseReference.child(FirebaseNodes.Users.Root).queryOrdered(byChild: FirebaseNodes.Users.Name).queryEqual(toValue: userName).observeSingleEvent(of: .value, with: { (snapshot) -> Void in
-//                    if snapshot.childrenCount > 0 {
-//                        self.labelMessage.text = "\(snapshot.childrenCount) user\(snapshot.childrenCount > 1 ? "s" : "") found!"
-//                    } else {
-//                        self.labelMessage.text = "User not found!"
-//                    }
-//                })
-//            }
-//        }
-//    }
-//    
-//    @IBAction func createTestWallet(_ sender: Any) {
-//        let walletReference = FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(self.walletIDTextField.text!)
-//        walletReference.child(FirebaseNodes.Wallets.Members.Root).child(FirebaseUtils.getUID()!).child(FirebaseNodes.Wallets.Members.Group).setValue("Owner")
-//        walletReference.child(FirebaseNodes.Wallets.Name).setValue("Default Name")
-//        walletReference.child(FirebaseNodes.Wallets.Description).setValue("Default description.")
-//    }
-//    
-//    @IBAction func changeOtherUserGroup(_ sender: Any) {
-//        let walletReference = FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(self.walletIDTextField.text!)
-//        walletReference.child(FirebaseNodes.Wallets.Members.Root).child("Wy3Hz5NpAOMNJUzePg0Cg7sVeDy2").child(FirebaseNodes.Wallets.Members.Group).setValue("Member")
-//    }
-//    
-//    @IBAction func changeWalletName(_ sender: Any) {
-//        let walletReference = FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(self.walletIDTextField.text!)
-//        walletReference.child(FirebaseNodes.Wallets.Name).setValue(self.walletNameTextField.text ?? "")
-//        self.walletNameTextField.text = ""
-//    }
-//    
-//    @IBAction func changeWalletDescription(_ sender: Any) {
-//        let walletReference = FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(self.walletIDTextField.text!)
-//        walletReference.child(FirebaseNodes.Wallets.Description).setValue(self.walletDescriptionTextField.text ?? "")
-//        self.walletDescriptionTextField.text = ""
-//    }
-//    
-//    @IBAction func changeMyPermission(_ sender: Any) {
-//        let walletReference = FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(self.walletIDTextField.text!)
-//        walletReference.child(FirebaseNodes.Wallets.Members.Root).child(FirebaseUtils.getUID()!).child(FirebaseNodes.Wallets.Members.Group).setValue("member")
-//    }
     
     //MARK: - Helpers
     func getUserProfileImage() {
@@ -150,5 +102,12 @@ class HomeViewController : UIViewController, UITextFieldDelegate {
                 self.imageViewProfile.image = UIImage(data: data)
             }
         })
+    }
+    
+    //MARK: - Firebase
+    func observeUserName(with completion: @escaping (DataSnapshot) -> Void) {
+        if let uid = FirebaseUtils.getUID() {
+            FirebaseUtils.databaseReference.child(FirebaseNodes.UsersPublic.Root).child(uid).child(FirebaseNodes.UsersPublic.Name).observe(.value, with: completion)
+        }
     }
 }

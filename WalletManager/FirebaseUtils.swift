@@ -6,29 +6,16 @@
 //  Copyright © 2017 Eric Labaci. All rights reserved.
 //
 
-//MARK: - Constants
-private struct Activity {
-    static let Undefined: String! = "Undefined"
-    static let UserName: String! = "UserName"
-    static let UserEmail: String! = "UserEmail"
-    static let UserAccountProvider: String! = "UserAccountProvider"
-}
-
-private struct ActivityType {
-    static let Undefined: Int! = 0
-    static let Saving: Int! = 1
-    static let SaveSuccess: Int! = 2
-    static let SaveFail: Int! = 3
-    static let Loading: Int! = 4
-    static let LoadSuccess: Int! = 5
-    static let LoadFail: Int! = 6
-}
-
+//FirebaseNodes Constants
 struct FirebaseNodes {
-    struct Users {
-        static let Root: String! = "users"
+    struct UsersPublic {
+        static let Root: String! = "usersPublic"
         static let Name: String! = "name"
         static let Email: String! = "email"
+    }
+    
+    struct UsersPrivate {
+        static let Root: String! = "usersPrivate"
         static let AccountProvider: String! = "accountProvider"
         static let Wallets: String! = "wallets"
     }
@@ -56,17 +43,14 @@ class FirebaseUtils {
     }()
     
     //MARK: - Generic fuctions
-    private class func save(_ databaseReference: DatabaseReference, _ data: Any, _ activity: String? = Activity.Undefined, withErrorBlock errorBlock: ((Error) -> Void)? = nil) {
-        self.logActivity(activity, ActivityType.Saving)
+    private class func save(_ databaseReference: DatabaseReference, _ data: Any, withErrorBlock errorBlock: ((Error) -> Void)? = nil) {
         databaseReference.setValue(data, withCompletionBlock: { (error, ref) -> Void in
             if let error = error {
-                self.logActivity(activity, ActivityType.SaveFail, error.localizedDescription)
                 if let errorBlock = errorBlock {
                     errorBlock(error)
                 }
                 return
             }
-            self.logActivity(activity, ActivityType.SaveSuccess)
         })
     }
     
@@ -79,206 +63,45 @@ class FirebaseUtils {
     //MARK: Name
     class func saveUserName(_ name: String, withErrorBlock errorBlock: ((Error) -> Void)? = nil) {
         if let uid = self.getUID() {
-            self.save(self.databaseReference.child(FirebaseNodes.Users.Root).child(uid).child(FirebaseNodes.Users.Name), name, Activity.UserName, withErrorBlock: errorBlock)
+            self.save(self.databaseReference.child(FirebaseNodes.UsersPublic.Root).child(uid).child(FirebaseNodes.UsersPublic.Name), name, withErrorBlock: errorBlock)
         }
     }
     
     class func loadUserName(_ completion: @escaping (String?) -> Void) {
         if let uid = self.getUID() {
-            self.logActivity(Activity.UserName, ActivityType.Loading)
-            self.databaseReference.child(FirebaseNodes.Users.Root).child(uid).child(FirebaseNodes.Users.Name).observeSingleEvent(of: .value, with: { (snapshot) -> Void in
+            self.databaseReference.child(FirebaseNodes.UsersPublic.Root).child(uid).child(FirebaseNodes.UsersPublic.Name).observeSingleEvent(of: .value, with: { (snapshot) -> Void in
                 if let userName = snapshot.value as? String {
-                    self.logActivity(Activity.UserName, ActivityType.LoadSuccess)
                     completion(userName)
                 } else {
-                    self.logActivity(Activity.UserName, ActivityType.LoadFail)
                     completion(nil)
                 }
             })
         }
     }
     
-    class func observeUserName(with completion: @escaping (DataSnapshot) -> Void) {
-        if let uid = self.getUID() {
-            self.databaseReference.child(FirebaseNodes.Users.Root).child(uid).child(FirebaseNodes.Users.Name).observe(.value, with: completion)
-        }
-    }
-    
-    class func removeUserNameObserver() {
-        if let uid = self.getUID() {
-            self.databaseReference.child(FirebaseNodes.Users.Root).child(uid).child(FirebaseNodes.Users.Name).removeAllObservers()
-        }
-    }
-    
     //MARK: Email
     class func saveUserEmail(_ email: String, withErrorBlock errorBlock: ((Error) -> Void)? = nil) {
         if let uid = self.getUID() {
-            self.save(self.databaseReference.child(FirebaseNodes.Users.Root).child(uid).child(FirebaseNodes.Users.Email), email, Activity.UserEmail, withErrorBlock: errorBlock)
+            self.save(self.databaseReference.child(FirebaseNodes.UsersPublic.Root).child(uid).child(FirebaseNodes.UsersPublic.Email), email, withErrorBlock: errorBlock)
         }
     }
     
     //MARK: Account Provider
     class func saveUserAccountProvider(_ accountProvider: String, withErrorBlock errorBlock: ((Error) -> Void)? = nil) {
         if let uid = self.getUID() {
-            self.save(self.databaseReference.child(FirebaseNodes.Users.Root).child(uid).child(FirebaseNodes.Users.AccountProvider), accountProvider, Activity.UserAccountProvider, withErrorBlock: errorBlock)
+            self.save(self.databaseReference.child(FirebaseNodes.UsersPrivate.Root).child(uid).child(FirebaseNodes.UsersPrivate.AccountProvider), accountProvider, withErrorBlock: errorBlock)
         }
     }
     
     //MARK: Profile Image
     class func loadUserProfileImage(_ completion: @escaping (Data?, Error?) -> Void) {
         if let uid = self.getUID() {
-            self.storageReference.child(FirebaseNodes.Users.Root).child(uid).child("profileImage").getData(maxSize: 5000000, completion: {(data, error) -> Void in
+            self.storageReference.child(FirebaseNodes.UsersPublic.Root).child(uid).child("profileImage").getData(maxSize: 5000000, completion: {(data, error) -> Void in
                 if let error = error {
                     DebugLogger.log("Firebase - Profile image download error: \(error.localizedDescription)")
                 }
                 completion(data, error)                
             })
-        }
-    }
-    
-    //MARK: - MyWalletsViewController
-    class func observeUserWalletsAdded(with completion: @escaping (String, String, String, Int) -> Void) {
-        self.databaseReference.child(FirebaseNodes.Users.Root).child(self.getUID()!).child(FirebaseNodes.Users.Wallets).observe(.childAdded, with: { (snapshot) -> Void in
-            //Get wallet ID
-            let walletID = snapshot.key
-            //Request wallet dictionary
-            var handle: UInt!
-            handle = self.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).observe(.value, with: { (snapshot) -> Void in
-                //Check if all fields are added
-                if snapshot.hasChild(FirebaseNodes.Wallets.CreationTime) {
-                    let dict = snapshot.value as! [String : Any]
-                    if let walletName = dict[FirebaseNodes.Wallets.Name] as? String,
-                        let walletDescription = dict[FirebaseNodes.Wallets.Description] as? String,
-                        let creationTime = dict[FirebaseNodes.Wallets.CreationTime] as? Int {
-                        self.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).removeObserver(withHandle: handle)
-                        completion(walletID, walletName, walletDescription, creationTime)
-                    }
-                }
-            })
-        })
-    }
-    
-    class func observeUserWalletsRemoved(with completion: @escaping (String) -> Void) {
-        self.databaseReference.child(FirebaseNodes.Users.Root).child(self.getUID()!).child(FirebaseNodes.Users.Wallets).observe(.childRemoved, with: { (snapshot) -> Void in
-            let walletID = snapshot.key
-            self.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).child(FirebaseNodes.Wallets.Name).removeAllObservers()
-            completion(walletID)
-        })
-    }
-    
-    class func observeWalletName(walletID: String, with completion: @escaping (String, String) -> Void) {
-        self.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).observe(.childChanged, with: { (snapshot) -> Void in
-            if snapshot.key == FirebaseNodes.Wallets.Name, let walletName = snapshot.value as? String {
-                completion(walletID, walletName)
-            }
-        })
-    }
-    
-    //MARK: - WalletSummaryViewController
-    class func fetchWalletMembers(walletID: String, completion: @escaping (Member) -> Void) {
-        self.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).child(FirebaseNodes.Wallets.Members.Root).observe(.childAdded, with: { (snapshot) -> Void in
-            let userID = snapshot.key
-            if snapshot.hasChild(FirebaseNodes.Wallets.Members.Group) {
-                let dict = snapshot.value as! [String : Any]
-                if let userGroup = dict[FirebaseNodes.Wallets.Members.Group] as? String {
-                    self.databaseReference.child(FirebaseNodes.Users.Root).child(userID).child(FirebaseNodes.Users.Name).observeSingleEvent(of: .value, with: { (snapshot) -> Void in
-                        if let userName = snapshot.value as? String {
-                            completion(Member(id: userID, name: userName, group: userGroup))
-                        }
-                    })
-                }
-            }
-        })
-    }
-    
-    class func observeWalletMemberName(userID: String, completion: @escaping (String) -> Void) {
-        self.databaseReference.child(FirebaseNodes.Users.Root).child(userID).observe(.childChanged, with: { (snapshot) -> Void in
-            //Name changed
-            if snapshot.key == FirebaseNodes.Users.Name {
-                if let userName = snapshot.value as? String {
-                    completion(userName)
-                }
-            }
-        })
-    }
-
-    class func observeWalletMemberGroupChanges(walletID: String, completion: @escaping (String, String) -> Void) {
-        self.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).child(FirebaseNodes.Wallets.Members.Root).observe(.childChanged, with: { (snapshot) -> Void in
-            let userID = snapshot.key
-            if snapshot.hasChild(FirebaseNodes.Wallets.Members.Group) {
-                let dict = snapshot.value as! [String : Any]
-                if let userGroup = dict[FirebaseNodes.Wallets.Members.Group] as? String {
-                    completion(userID, userGroup)
-                }
-            }
-        })
-    }
-
-    class func observeWalletUserRemoved(walletID: String, completion: @escaping (String) -> Void) {
-        self.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).child(FirebaseNodes.Wallets.Members.Root).observe(.childRemoved, with: { (snapshot) -> Void in
-            let userID = snapshot.key
-            completion(userID)
-        })
-    }
-    
-    class func removeAllWalletMemberPropertiesObservers(userID: String) {
-        self.databaseReference.child(FirebaseNodes.Users.Root).child(userID).removeAllObservers()
-    }
-    
-    class func observeUserRemovalFromWallet(walletID: String, completion: @escaping () -> Void) {
-        self.databaseReference.child(FirebaseNodes.Users.Root).child(self.getUID()!).child(FirebaseNodes.Users.Wallets).child(walletID).observe(.value, with: { (snapshot) -> Void in
-            if !(snapshot.value is Bool) {
-                self.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).child(FirebaseNodes.Wallets.Members.Root).removeAllObservers()
-            }
-        })
-    }
-    
-    //MARK: - Debug Log
-    private class func logActivity(_ activity: String?, _ type: Int?, _ description: String? = nil) {
-        var activity: String! = activity
-        var type: Int! = type
-        
-        if activity == nil {
-            activity = Activity.Undefined
-        }
-        if type == nil {
-            type = ActivityType.Undefined
-        }
-        
-        var activityType = ""
-        switch type {
-        case ActivityType.Saving:
-            activityType = "Saving"
-            break
-        
-        case ActivityType.SaveSuccess:
-            activityType = "Save success"
-            break
-        
-        case ActivityType.SaveFail:
-            activityType = "Save fail"
-            break
-            
-        case ActivityType.Loading:
-            activityType = "Loading"
-            break
-            
-        case ActivityType.LoadSuccess:
-            activityType = "Load success"
-            break
-            
-        case ActivityType.LoadFail:
-            activityType = "Load fail"
-            break
-            
-        default:
-            activityType = "Undefined"
-            break
-        }
-        if let description = description {
-            DebugLogger.log("FirebaseUtils [\(activity!)] - \(activityType) - \(description)")
-        } else {
-            DebugLogger.log("FirebaseUtils [\(activity!)] - \(activityType)")
         }
     }
 }

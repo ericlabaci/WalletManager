@@ -15,10 +15,10 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
     
     //MARK: - Constraints
     @IBOutlet weak var loadingViewHeightConstraint: NSLayoutConstraint!
-    var loadingViewHeightCOnstraintOriginalValue: CGFloat!
+    var loadingViewHeightConstraintOriginalValue: CGFloat!
 
     //MARK: - Variables
-    var walletNameArray: [(id: String, name: String, description: String, time: Int)] = []
+    var walletNameArray: [Wallet] = []
     var numberOfWallets: Int = 0
     
     //MARK: - Functions
@@ -31,35 +31,46 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
         self.walletsTableView.delegate = self
         self.walletsTableView.dataSource = self
         
-        self.loadingViewHeightCOnstraintOriginalValue = self.loadingViewHeightConstraint.constant
+        self.loadingViewHeightConstraintOriginalValue = self.loadingViewHeightConstraint.constant
         
-        FirebaseUtils.databaseReference.child(FirebaseNodes.Users.Root).child(FirebaseUtils.getUID()!).child(FirebaseNodes.Users.Wallets).observe(.value, with: { (snapshot) -> Void in
-            self.numberOfWallets = Int(snapshot.childrenCount)
+        self.observeNumberOfWalletsFromUser(with: { (numberOfWallets) -> Void in
+            self.numberOfWallets = numberOfWallets
             if self.numberOfWallets == 0 {
                 self.hideLoadingView()
             }
         })
         
-        FirebaseUtils.observeUserWalletsAdded(with: { (walletID, name, description, time) -> Void in
-            self.walletNameArray.append((id: walletID, name: name, description: description, time: time))
+        self.observeWalletsAddedToUser(with: { (wallet) -> Void in
+            self.walletNameArray.append(wallet)
             self.walletNameArray.sort(by: { (tuple1, tuple2) -> Bool in
                 return tuple1.id < tuple2.id
             })
-            if let i = self.walletNameArray.index(where: {$0.id == walletID}) {
+            if let i = self.walletNameArray.index(where: {$0.id == wallet.id}) {
                 self.walletsTableView.insertRows(at: [IndexPath(row: i, section: 0)], with: .fade)
             }
             if self.numberOfWallets == self.walletNameArray.count {
                 self.hideLoadingView()
             }
-            FirebaseUtils.observeWalletName(walletID: walletID, with: { (walletID, dict) -> Void in
+            self.observeWalletProperties(walletID: wallet.id, with: { (walletID, dict) -> Void in
+                var needsReload = false
                 if let i = self.walletNameArray.index(where: {$0.id == walletID}) {
-                    self.walletNameArray[i].name = dict
-                    self.walletsTableView.reloadAllSections(with: .fade)
+                    for key in dict.keys {
+                        if key == FirebaseNodes.Wallets.Name, let walletName = dict[key] as? String {
+                            self.walletNameArray[i].name = walletName
+                            needsReload = true
+                        } else if key == FirebaseNodes.Wallets.Description, let walletDescription = dict[key] as? String {
+                            self.walletNameArray[i].descr = walletDescription
+                            needsReload = true
+                        }
+                    }
+                    if needsReload {
+                        self.walletsTableView.reloadAllSections(with: .fade)
+                    }
                 }
             })
         })
         
-        FirebaseUtils.observeUserWalletsRemoved(with: { (walletID) -> Void in
+        self.observeWalletsRemovedFromUser(with: { (walletID) -> Void in
             if let i = self.walletNameArray.index(where: {$0.id == walletID}) {
                 self.walletNameArray.remove(at: i)
                 self.walletsTableView.deleteRows(at: [IndexPath(row: i, section: 0)], with: .fade)
@@ -85,7 +96,7 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: WalletTableViewCellReuseIdentifier, for: indexPath) as? WalletTableViewCell {
             cell.walletNameLabel.text = self.walletNameArray[indexPath.row].name
-            cell.walletDescriptionLabel.text = self.walletNameArray[indexPath.row].description
+            cell.walletDescriptionLabel.text = self.walletNameArray[indexPath.row].descr
             cell.setCreationDateLabel(creationDate: DateUtils.firebaseTimeToCreationTimeFormat(millis: self.walletNameArray[indexPath.row].time))
             
             return cell
@@ -101,7 +112,7 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
 
     //MARK: - Loading View
     func showLoadingView() {
-        self.loadingViewHeightConstraint.constant = self.loadingViewHeightCOnstraintOriginalValue
+        self.loadingViewHeightConstraint.constant = self.loadingViewHeightConstraintOriginalValue
         UIView.animate(withDuration: 0.5, animations: { () -> Void in
             self.loadingView.alpha = 1.0
             self.view.setNeedsLayout()
@@ -122,8 +133,57 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let indexPath = sender as? IndexPath {
             if let walletSummaryVC = segue.destination as? WalletSummaryViewController {
-                walletSummaryVC.walletInfo = self.walletNameArray[indexPath.row]
+                walletSummaryVC.wallet = self.walletNameArray[indexPath.row]
             }
         }
+    }
+    
+    //MARK: - Firebase
+    func observeWalletsAddedToUser(with completion: @escaping (Wallet) -> Void) {
+        if let uid = FirebaseUtils.getUID() {
+            FirebaseUtils.databaseReference.child(FirebaseNodes.UsersPrivate.Root).child(uid).child(FirebaseNodes.UsersPrivate.Wallets).observe(.childAdded, with: { (snapshot) -> Void in
+                //Get wallet ID
+                let walletID = snapshot.key
+                //Request wallet dictionary
+                var handle: UInt!
+                handle = FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).observe(.value, with: { (snapshot) -> Void in
+                    //Check if all fields are added
+                    if snapshot.hasChild(FirebaseNodes.Wallets.CreationTime) {
+                        let dict = snapshot.value as! [String : Any]
+                        if let walletName = dict[FirebaseNodes.Wallets.Name] as? String,
+                            let walletDescription = dict[FirebaseNodes.Wallets.Description] as? String,
+                            let creationTime = dict[FirebaseNodes.Wallets.CreationTime] as? Int {
+                            FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).removeObserver(withHandle: handle)
+                            completion(Wallet(id: walletID, name: walletName, description: walletDescription, time: creationTime))
+                        }
+                    }
+                })
+            })
+        }
+    }
+    
+    func observeWalletsRemovedFromUser(with completion: @escaping (String) -> Void) {
+        var handle: UInt!
+        if let uid = FirebaseUtils.getUID() {
+            handle = FirebaseUtils.databaseReference.child(FirebaseNodes.UsersPrivate.Root).child(uid).child(FirebaseNodes.UsersPrivate.Wallets).observe(.childRemoved, with: { (snapshot) -> Void in
+                let walletID = snapshot.key
+                FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).child(FirebaseNodes.Wallets.Name).removeObserver(withHandle: handle)
+                completion(walletID)
+            })
+        }
+    }
+    
+    func observeWalletProperties(walletID: String, with completion: @escaping (String, [String : Any]) -> Void) {
+        FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(walletID).observe(.childChanged, with: { (snapshot) -> Void in
+            if let value = snapshot.value {
+                completion(walletID, [snapshot.key : value])
+            }
+        })
+    }
+    
+    func observeNumberOfWalletsFromUser(with completion: @escaping (Int) -> Void) {
+        FirebaseUtils.databaseReference.child(FirebaseNodes.UsersPrivate.Root).child(FirebaseUtils.getUID()!).child(FirebaseNodes.UsersPrivate.Wallets).observe(.value, with: { (snapshot) -> Void in
+            completion(Int(snapshot.childrenCount))
+        })
     }
 }
