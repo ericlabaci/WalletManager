@@ -78,6 +78,10 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
         })
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        self.tabBarController?.tabBar.isHidden = false
+    }
     
     //MARK: - TableViewDataSource
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -134,6 +138,7 @@ class MyWalletsViewController: UIViewController, UITableViewDelegate, UITableVie
         if let indexPath = sender as? IndexPath {
             if let walletSummaryVC = segue.destination as? WalletSummaryViewController {
                 walletSummaryVC.wallet = self.walletNameArray[indexPath.row]
+                self.tabBarController?.tabBar.isHidden = true
             }
         }
     }

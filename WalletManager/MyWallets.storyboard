@@ -112,13 +112,13 @@
                                 <rect key="frame" x="69" y="67.5" width="235" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AIX-dK-uHW">
                                 <rect key="frame" x="112" y="105.5" width="192" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jme-nz-18b">
                                 <rect key="frame" x="16" y="110" width="88" height="21"/>
@@ -163,7 +163,7 @@
         <!--Wallet Summary View Controller-->
         <scene sceneID="vMz-Si-U6Y">
             <objects>
-                <viewController id="Pc2-L0-igT" customClass="WalletSummaryViewController" customModule="WalletManager" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="Pc2-L0-igT" customClass="WalletSummaryViewController" customModule="WalletManager" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="vPw-p0-MAQ"/>
                         <viewControllerLayoutGuide type="bottom" id="8II-Qv-442"/>
@@ -216,7 +216,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="PpE-i3-8F2" kind="show" id="E4F-VF-O0t"/>
+                                            <segue destination="PpE-i3-8F2" kind="show" identifier="AddMemberSegue" id="E4F-VF-O0t"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -227,8 +227,8 @@
                                     <constraint firstItem="yey-nn-wyA" firstAttribute="top" secondItem="FgA-JD-6c3" secondAttribute="top" id="DLe-Z3-UrD"/>
                                     <constraint firstItem="yey-nn-wyA" firstAttribute="leading" secondItem="FgA-JD-6c3" secondAttribute="leading" id="HBu-BC-gHm"/>
                                     <constraint firstItem="T1k-pF-Y2d" firstAttribute="top" secondItem="yey-nn-wyA" secondAttribute="bottom" id="aHP-YU-fGy"/>
-                                    <constraint firstAttribute="bottom" secondItem="T1k-pF-Y2d" secondAttribute="bottom" id="ikX-bq-nHN"/>
                                     <constraint firstAttribute="trailing" secondItem="T1k-pF-Y2d" secondAttribute="trailing" id="ngX-kX-rZh"/>
+                                    <constraint firstAttribute="bottom" secondItem="T1k-pF-Y2d" secondAttribute="bottom" id="pF5-mT-lZS"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -299,7 +299,7 @@
                                 <rect key="frame" x="0.0" y="64" width="320" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no"/>
                             </textField>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="e70-3e-Yxi">
                                 <rect key="frame" x="0.0" y="134" width="320" height="345"/>
@@ -307,12 +307,16 @@
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nts-wi-Og0">
                                 <rect key="frame" x="0.0" y="479" width="320" height="40"/>
+                                <color key="backgroundColor" red="0.62304789439999997" green="0.73889138070000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="em5-9L-zAv"/>
                                 </constraints>
-                                <state key="normal" title="Search"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                <state key="normal" title="Add Member">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
-                                    <action selector="didTapSearch:" destination="PpE-i3-8F2" eventType="touchUpInside" id="lPi-j1-8RI"/>
+                                    <action selector="didTapAddMembers:" destination="PpE-i3-8F2" eventType="touchUpInside" id="8LM-tf-VhH"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -334,6 +338,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="addMembersButton" destination="nts-wi-Og0" id="65u-lQ-wQO"/>
                         <outlet property="loadingView" destination="DX7-Ei-yHQ" id="tmM-g2-iDf"/>
                         <outlet property="loadingViewHeightConstraint" destination="IlD-iw-yEs" id="lvk-8K-QyI"/>
                         <outlet property="memberTableView" destination="e70-3e-Yxi" id="p6u-Ux-jy5"/>

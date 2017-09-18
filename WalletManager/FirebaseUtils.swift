@@ -11,6 +11,7 @@ struct FirebaseNodes {
     struct UsersPublic {
         static let Root: String! = "usersPublic"
         static let Name: String! = "name"
+        static let SearchName: String! = "searchName"
         static let Email: String! = "email"
     }
     

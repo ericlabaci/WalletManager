@@ -28,7 +28,7 @@ class HomeViewController : UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.storageReference = Storage.storage().reference().child("usersPrivate").child(FirebaseUtils.getUID() ?? "")
+        self.storageReference = Storage.storage().reference().child("usersPrivate").child(FirebaseUtils.getUID()!)
 
         self.imageViewProfile.layer.masksToBounds = true
         self.imageViewProfile.layer.cornerRadius = imageViewProfile.frame.size.width / 2.0
@@ -37,6 +37,7 @@ class HomeViewController : UIViewController, UITextFieldDelegate {
             //Check if image exists
             DebugLogger.log("Google - Verifying if user has image on firebase")
             self.storageReference?.child("profileImage").downloadURL(completion: { (url, error) -> Void in
+                print(url)
                 //If error occurs, image doesn't exist
                 if error != nil {
                     //Download profile image data

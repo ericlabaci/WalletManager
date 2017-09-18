@@ -8,6 +8,12 @@
 
 import UIKit
 
+protocol WalletSummaryViewControllerDelegate {
+    func didDoSomething(name: String, age: Int)
+    
+    func didDoSomethingElse()
+}
+
 class WalletSummaryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     //MARK: - IBOutlets
     @IBOutlet weak var walletNameLabel: UILabel!
@@ -25,7 +31,13 @@ class WalletSummaryViewController: UIViewController, UITableViewDelegate, UITabl
         let group1 = member1.group
         let group2 = member2.group
         if group1 == group2 {
-            return member1.name < member2.name
+            if member1.id == FirebaseUtils.getUID() {
+                return true
+            } else if member2.id == FirebaseUtils.getUID() {
+                return false
+            } else {
+                return member1.name < member2.name
+            }
         }
         if group1 == "Owner" {
             return true
@@ -105,12 +117,21 @@ class WalletSummaryViewController: UIViewController, UITableViewDelegate, UITabl
         self.observeOwnRemovalFromWallet(walletID: self.wallet.id, completion: { () -> Void in
             let alertController = UIAlertController(title: "Sorry", message: "You were removed from this wallet. :(", preferredStyle: .alert)
             let okAction = UIAlertAction(title: "Ok", style: .default, handler: { (action) -> Void in
-                self.navigationController?.popViewController(animated: true)
+                self.navigationController?.popToRootViewController(animated: true)
             })
             
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
         })
+    }
+    
+    //MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "AddMemberSegue" {
+            if let addMemberVC = segue.destination as? AddMemberViewController {
+                addMemberVC.wallet = self.wallet
+            }
+        }
     }
     
     //MARK: - IBActions
@@ -142,7 +163,11 @@ class WalletSummaryViewController: UIViewController, UITableViewDelegate, UITabl
     //MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: MemberTableViewCellReuseIdentifier, for: indexPath) as? MemberTableViewCell {
-            cell.memberNameLabel.text = self.memberArray[indexPath.row].name
+            if FirebaseUtils.getUID() == self.memberArray[indexPath.row].id {
+                cell.memberNameLabel.attributedText = NSAttributedString(string: self.memberArray[indexPath.row].name, attributes: [NSFontAttributeName : UIFont.boldSystemFont(ofSize: 15.0)])
+            } else {
+                cell.memberNameLabel.attributedText = NSAttributedString(string: self.memberArray[indexPath.row].name, attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 15.0)])
+            }
             cell.group = self.memberArray[indexPath.row].group
             
             return cell
@@ -153,6 +178,76 @@ class WalletSummaryViewController: UIViewController, UITableViewDelegate, UITabl
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    //MARK: - TableView Editing
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        var editingActionArray: [UITableViewRowAction] = []
+        let deleteRowAction = UITableViewRowAction(style: .destructive, title: "Remove", handler:{ (action, indexPath) -> Void in
+            FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(self.wallet.id).child(FirebaseNodes.Wallets.Members.Root).child("\(self.memberArray[indexPath.row].id)").removeValue(completionBlock: { (error, reference) -> Void in
+                if let error = error {
+                    DebugLogger.log("Error removing user from wallet: \(error.localizedDescription)")
+                }
+            })
+        })
+        editingActionArray.append(deleteRowAction)
+        
+        if self.memberArray[indexPath.row].group != "Owner" {
+            let promoteRowAction = UITableViewRowAction(style: .normal, title: "/\\", handler:{ (action, indexPath) -> Void in
+                let userGroup = self.memberArray[indexPath.row].group
+                var newGroup: String = ""
+                
+                if userGroup == "Guest" {
+                    newGroup = "Member"
+                } else if userGroup == "Member" {
+                    newGroup = "Owner"
+                } else if userGroup == "Owner" {
+                    return
+                }
+                
+                FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(self.wallet.id).child(FirebaseNodes.Wallets.Members.Root).child("\(self.memberArray[indexPath.row].id)").child(FirebaseNodes.Wallets.Members.Group).setValue(newGroup, withCompletionBlock: { (error, reference) -> Void in
+                    if let error = error {
+                        DebugLogger.log("Error promoting user: \(error.localizedDescription)")
+                    }
+                })
+            })
+            editingActionArray.insert(promoteRowAction, at: 0)
+        }
+        
+        if self.memberArray[indexPath.row].group != "Guest" {
+            let demoteRowAction = UITableViewRowAction(style: .normal, title: "\\/", handler:{ (action, indexPath) -> Void in
+                let userGroup = self.memberArray[indexPath.row].group
+                var newGroup: String = ""
+                
+                if userGroup == "Guest" {
+                    return
+                } else if userGroup == "Member" {
+                    newGroup = "Guest"
+                } else if userGroup == "Owner" {
+                    newGroup = "Member"
+                }
+                
+                FirebaseUtils.databaseReference.child(FirebaseNodes.Wallets.Root).child(self.wallet.id).child(FirebaseNodes.Wallets.Members.Root).child("\(self.memberArray[indexPath.row].id)").child(FirebaseNodes.Wallets.Members.Group).setValue(newGroup, withCompletionBlock: { (error, reference) -> Void in
+                    if let error = error {
+                        DebugLogger.log("Error demoting user: \(error.localizedDescription)")
+                    }
+                })
+            })
+            editingActionArray.insert(demoteRowAction, at: 0)
+        }
+        return editingActionArray
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .delete
+    }
+    
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
     }
     
     //MARK: - Firebase
